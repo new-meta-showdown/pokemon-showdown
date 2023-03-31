@@ -3433,7 +3433,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		name: "Radioactive",
 		rating: 2.5,
-		num: 903,
+		num: 902,
 	},
 	raindish: {
 		onWeather(target, source, effect) {
@@ -4594,6 +4594,14 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3.5,
 		num: 47,
 	},
+	timereverse: {
+        onStart(pokemon) {
+            this.actions.useMove("lazyencore", pokemon);
+        },
+        name: "Time Reverse",
+        rating: 5,
+        num: 903,
+    },
 	tintedlens: {
 		onModifyDamage(damage, source, target, move) {
 			if (target.getMoveHitData(move).typeMod < 0) {
