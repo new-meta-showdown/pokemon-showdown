@@ -237,6 +237,18 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2,
 		num: 165,
 	},
+	artillery: {
+        onBasePowerPriority: 23,
+        onBasePower(basePower, attacker, defender, move) {
+            if (move.flags['bullet'] || move.id === 'windblast') {
+                this.debug('Artillery boost');
+								return this.chainModify([4915, 4096]);
+            }
+        },
+        name: "Artillery",
+        rating: 3,
+        num: 904,
+    },
 	asoneglastrier: {
 		onPreStart(pokemon) {
 			this.add('-ability', pokemon, 'As One');
@@ -428,6 +440,18 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 0.5,
 		num: 145,
 	},
+	blademaster: {
+        onBasePowerPriority: 23,
+        onBasePower(basePower, attacker, defender, move) {
+            if (move.flags['blade']) {
+                this.debug('Blade Master boost');
+								return this.chainModify([4915, 4096]);
+            }
+        },
+        name: "Blade Master",
+        rating: 3,
+        num: 905,
+    },
 	blaze: {
 		onModifyAtkPriority: 5,
 		onModifyAtk(atk, attacker, defender, move) {

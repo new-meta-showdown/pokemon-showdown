@@ -28,6 +28,7 @@ interface MoveFlags {
 	allyanim?: 1; // The move plays its animation when used on an ally.
 	bypasssub?: 1; // Ignores a target's substitute.
 	bite?: 1; // Power is multiplied by 1.5 when used by a Pokemon with the Ability Strong Jaw.
+	blade?: 1; // Power is multiplied by 1.5 when used by a Pokemon with the Ability Blade Master.
 	bullet?: 1; // Has no effect on Pokemon with the Ability Bulletproof.
 	charge?: 1; // The user is unable to make a move between turns.
 	contact?: 1; // Makes contact.

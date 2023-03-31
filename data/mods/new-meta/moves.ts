@@ -555,18 +555,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		zMove: {effect: 'heal'},
 		contestType: "Clever",
 	},
-	artillery: {
-        onBasePowerPriority: 23,
-        onBasePower(basePower, attacker, defender, move) {
-            if (move.flags['bullet'] || move.id === 'windblast') {
-                this.debug('Artillery boost');
-								return this.chainModify([4915, 4096]);
-            }
-        },
-        name: "Artillery",
-        rating: 3,
-        num: 904,
-    },
 	aromaticmist: {
 		num: 597,
 		accuracy: true,
