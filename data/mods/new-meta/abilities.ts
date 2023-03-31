@@ -798,6 +798,25 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3,
 		num: 186,
 	},
+	daunt: {
+		onStart(pokemon) {
+			let activated = false;
+			for (const target of pokemon.adjacentFoes()) {
+				if (!activated) {
+					this.add('-ability', pokemon, 'Daunt', 'boost');
+					activated = true;
+				}
+				if (target.volatiles['substitute']) {
+					this.add('-immune', target);
+				} else {
+					this.boost({spa: -1}, target, pokemon, null, true);
+				}
+			}
+		},
+		name: "Daunt",
+		rating: 3.5,
+		num: 900,
+	},
 	dauntlessshield: {
 		onStart(pokemon) {
 			if (this.effectState.shieldBoost) return;
@@ -4024,6 +4043,12 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Solar Power",
 		rating: 2,
 		num: 94,
+	},
+	solidfooting: {
+		// coded in moves.ts
+		name: "Solid Footing",
+		rating: 3.5,
+		num: 901,
 	},
 	solidrock: {
 		onSourceModifyDamage(damage, source, target, move) {

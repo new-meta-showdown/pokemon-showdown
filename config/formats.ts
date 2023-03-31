@@ -53,6 +53,16 @@ export const Formats: FormatList = [
 		ruleset: ['[Gen 9] Random Battle', 'Blitz'],
 	},
 	{
+		name: "[Gen 9] Test New Meta",
+		threads: [
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3710911/">AG Metagame Discussion</a>`,
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3714177/">AG Viability Rankings</a>`,
+		],
+
+		mod: 'new-meta',
+		ruleset: ['Min Source Gen = 9', 'Obtainable', 'Team Preview', 'HP Percentage Mod', 'Cancel Mod', 'Endless Battle Clause'],
+	},
+	{
 		name: "[Gen 9] OU",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3710915/">SV OU Metagame Discussion</a>`,
