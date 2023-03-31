@@ -3422,6 +3422,19 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2.5,
 		num: 95,
 	},
+	radioactive: {
+		// poison and cosmic type moves deal 1.2x damage
+		onBasePowerPriority: 21,
+		onBasePower(basePower, attacker, defender, move) {
+			if (move.type === 'Poison' || move.type === 'Cosmic') {
+				this.debug('Radioactive boost');
+				return this.chainModify(1.2);
+			}
+		},
+		name: "Radioactive",
+		rating: 2.5,
+		num: 903,
+	},
 	raindish: {
 		onWeather(target, source, effect) {
 			if (target.hasItem('utilityumbrella')) return;
