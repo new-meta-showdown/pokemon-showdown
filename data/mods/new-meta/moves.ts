@@ -21061,6 +21061,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 			case 'snow':
 				move.type = 'Ice';
 				break;
+			case 'meteorshower':
+				move.type = 'Cosmic';
+				break;
 			}
 		},
 		onModifyMove(move, pokemon) {
@@ -21078,6 +21081,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 				break;
 			case 'hail':
 			case 'snow':
+				move.basePower *= 2;
+				break;
+			case 'meteorshower':
 				move.basePower *= 2;
 				break;
 			}

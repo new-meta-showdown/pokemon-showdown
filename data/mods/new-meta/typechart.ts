@@ -26,6 +26,7 @@ export const TypeChart: {[k: string]: TypeData} = {
 	},
 	cosmic: {
 		damageTaken: {
+			meteorshower: 3,
 			Bug: 0,
 			Cosmic: 1,
 			Dark: 2,

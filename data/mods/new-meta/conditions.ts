@@ -735,6 +735,39 @@ export const Conditions: {[k: string]: ConditionData} = {
 			this.add('-weather', 'none');
 		},
 	},
+	meteorshower: {
+		name: 'MeteorShower',
+		effectType: 'Weather',
+		duration: 5,
+		durationCallback(source, effect) {
+			if (source?.hasItem('meteorite')) {
+				return 8;
+			}
+			return 5;
+		},
+		onFieldStart(field, source, effect) {
+			if (effect?.effectType === 'Ability') {
+				if (this.gen <= 5) this.effectState.duration = 0;
+				this.add('-weather', 'MeteorShower', '[from] ability: ' + effect.name, '[of] ' + source);
+			} else {
+				this.add('-weather', 'MeteorShower');
+			}
+		},
+		onFieldResidualOrder: 1,
+		onFieldResidual() {
+			this.add('-weather', 'MeteorShower', '[upkeep]');
+			if (this.field.isWeather('meteorshower')) this.eachEvent('Weather');
+		},
+		onWeather(target) {
+			this.damage(target.baseMaxhp / 16);
+			if (target.hasType('Cosmic')) {
+				this.heal(target.baseMaxhp / 16);
+			}
+		},
+		onFieldEnd() {
+			this.add('-weather', 'none');
+		},
+	},
 
 	dynamax: {
 		name: 'Dynamax',
