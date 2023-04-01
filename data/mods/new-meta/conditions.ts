@@ -76,6 +76,12 @@ export const Conditions: {[k: string]: ConditionData} = {
 			if (move.sleepUsable) {
 				return;
 			}
+			if (pokemon.hasAbility('sleepyfellow')) {
+				const result = this.random(10);
+				if (result === 0) {
+					return;
+				}
+			}
 			return false;
 		},
 	},
@@ -201,6 +207,41 @@ export const Conditions: {[k: string]: ConditionData} = {
 			this.runEvent('Flinch', pokemon);
 			return false;
 		},
+	},
+	lovetouch: {
+		name: "Love Touch",
+		noCopy: true,
+		onStart(pokemon, source, effect) {
+				if (!this.runEvent('Attract', pokemon, source)) {
+					this.debug('Attract event failed');
+					return false;
+				}
+
+				if (effect.id === 'cutecharm') {
+					this.add('-start', pokemon, 'Attract', '[from] ability: Cute Charm', '[of] ' + source);
+				} else if (effect.id === 'destinyknot') {
+					this.add('-start', pokemon, 'Attract', '[from] item: Destiny Knot', '[of] ' + source);
+				} else {
+					this.add('-start', pokemon, 'Attract');
+				}
+			},
+			onUpdate(pokemon) {
+				if (this.effectState.source && !this.effectState.source.isActive && pokemon.volatiles['attract']) {
+					this.debug('Removing Attract volatile on ' + pokemon);
+					pokemon.removeVolatile('attract');
+				}
+			},
+			onBeforeMovePriority: 2,
+			onBeforeMove(pokemon, target, move) {
+				this.add('-activate', pokemon, 'move: Attract', '[of] ' + this.effectState.source);
+				if (this.randomChance(1, 2)) {
+					this.add('cant', pokemon, 'Attract');
+					return false;
+				}
+			},
+			onEnd(pokemon) {
+				this.add('-end', pokemon, 'Attract', '[silent]');
+			},
 	},
 	trapped: {
 		name: 'trapped',

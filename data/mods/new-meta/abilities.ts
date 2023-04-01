@@ -1863,6 +1863,19 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 0,
 		num: 131,
 	},
+	herbivore: {
+		onTryHit(target, source, move) {
+			if (target !== source && move.type === 'Grass') {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Herbivore');
+				}
+				return null;
+			}
+		},
+		name: "Herbivore",
+		rating: 3.5,
+		num: 945,
+	},
 	heatproof: {
 		onSourceBasePowerPriority: 18,
 		onSourceBasePower(basePower, attacker, defender, move) {
@@ -2486,6 +2499,22 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
         rating: 3,
         num: 917,
     },
+	lovetouch: {
+		onModifyMove(move) {
+			if (!move || !move.flags['contact'] || move.target === 'self') return;
+			if (!move.secondaries) {
+				move.secondaries = [];
+			}
+			move.secondaries.push({
+				chance: 30,
+				volatileStatus: 'lovetouch',
+				ability: this.dex.abilities.get('lovetouch'),
+			});
+		},
+		name: "Love Touch",
+		rating: 2,
+		num: 942,
+	},
 	magicbounce: {
 		name: "Magic Bounce",
 		onTryHitPriority: 1,
@@ -3256,6 +3285,20 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Pastel Veil",
 		rating: 2,
 		num: 257,
+	},
+	perfectmelody: {
+		onSourceModifyAccuracyPriority: 9,
+		onSourceModifyAccuracy(accuracy, target, source, move) {
+			if (typeof accuracy !== 'number') return;
+			if (move.flags['sound']) {
+				this.debug('perfectmelody - enhancing accuracy');
+				return 100;
+			}
+			return accuracy;
+		},
+		name: "Perfect Melody",
+		rating: 2,
+		num: 943,
 	},
 	perishbody: {
 		onDamagingHit(damage, target, source, move) {
@@ -4382,6 +4425,12 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3,
 		num: 92,
 	},
+	sleepyfellow: {
+		//coded in conditions.ts (slp)
+        name: "Sleepy Fellow",
+        rating: 1.5,
+        num: 944,
+    },
 	slowstart: {
 		onStart(pokemon) {
 			pokemon.addVolatile('slowstart');
@@ -5144,6 +5193,12 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3.5,
 		num: 295,
 	},
+	toxicintake: {
+		// coded in conditions.ts
+        name: "Toxic Intake",
+        rating: 1.5,
+        num: 1049,
+    },
 	toxicrush: {
 		onModifySpe(spe, pokemon) {
 			if (this.field.isWeather('toxiccloud')) {
