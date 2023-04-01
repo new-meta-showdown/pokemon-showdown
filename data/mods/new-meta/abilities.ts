@@ -2125,6 +2125,20 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: -1,
 		num: 103,
 	},
+	laststand: {
+        onAfterMoveSecondary(target, source, move) {
+            if (!source || source === target || !target.hp || !move.totalDamage) return;
+            const lastAttackedBy = target.getLastAttackedBy();
+            if (!lastAttackedBy) return;
+            const damage = move.multihit ? move.totalDamage : lastAttackedBy.damage;
+            if (target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2) {
+                this.boost({spe: 1});
+            }
+        },
+        name: "Last Stand",
+        rating: 4,
+        num: 911,
+    },
 	leafguard: {
 		onSetStatus(status, target, source, effect) {
 			if (['sunnyday', 'desolateland'].includes(target.effectiveWeather())) {
