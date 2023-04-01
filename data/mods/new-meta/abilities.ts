@@ -4903,6 +4903,27 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3.5,
 		num: 84,
 	},
+	undead: {
+		onTryHit(target, source, move) {
+			if (target !== source && move.type === 'Ghost') {
+					this.add('-immune', target, '[from] ability: Undead');
+				return null;
+			}
+        },
+        onTryBoost(boost, target, source, effect) {
+            if (effect.id === 'intimidate') {
+                delete boost.atk;
+                this.add('-immune', target, '[from] ability: Undead');
+            }
+            if (effect.id === 'daunt') {
+                delete boost.spa;
+                this.add('-immune', target, '[from] ability: Undead');
+            }
+        },
+        name: "Undead",
+        rating: 4,
+        num: 908,
+    },
 	unnerve: {
 		onPreStart(pokemon) {
 			this.add('-ability', pokemon, 'Unnerve');
