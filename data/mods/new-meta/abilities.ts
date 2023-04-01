@@ -304,6 +304,23 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3.5,
 		num: 267,
 	},
+	astralshroud: {
+		onImmunity(type, pokemon) {
+			if (type === 'meteorshower') return false;
+		},
+		onModifyAccuracyPriority: -1,
+		onModifyAccuracy(accuracy) {
+			if (typeof accuracy !== 'number') return;
+			if (this.field.isWeather('meteorshower')) {
+				this.debug('Astral Shroud - decreasing accuracy');
+				return this.chainModify([3277, 4096]);
+			}
+		},
+		isBreakable: true,
+		name: "Astral Shroud",
+		rating: 1.5,
+		num: 992,
+	},
 	aurabreak: {
 		onStart(pokemon) {
 			if (this.suppressingAbility(pokemon)) return;
@@ -919,6 +936,14 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Cosmersion",
 		rating: 3.5,
 		num: 986,
+	},
+	cosmicdebris: {
+		onDamagingHit(damage, target, source, move) {
+			this.field.setWeather('meteorshower');
+		},
+		name: "Cosmic Debris",
+		rating: 1,
+		num: 994,
 	},
 	cosmicforce: {
 		onBasePowerPriority: 21,
@@ -3507,6 +3532,12 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
         rating: 3,
         num: 916,
     },
+	orbitalfield: {
+		// implemented in conditions.ts
+		name: "Orbital Field",
+		rating: 4,
+		num: 993,
+	},
 	orchestral: {
 		onBasePowerPriority: 7,
 		onBasePower(basePower, attacker, defender, move) {
@@ -4257,6 +4288,16 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Pyrotoxin",
 		rating: 4,
 		num: 961,
+	},
+	quantumspeed: {
+		onModifySpe(spe, pokemon) {
+			if (this.field.isWeather('meteorshower')) {
+				return this.chainModify(2);
+			}
+		},
+		name: "Meteor Shower",
+		rating: 3,
+		num: 995,
 	},
 	quarkdrive: {
 		onStart(pokemon) {
@@ -5194,6 +5235,23 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2,
 		num: 43,
 	},
+	spatialpower: {
+		onModifySpAPriority: 5,
+		onModifySpA(spa, pokemon) {
+			if (['meteorshower'].includes(pokemon.effectiveWeather())) {
+				return this.chainModify(1.5);
+			}
+		},
+		onWeather(target, source, effect) {
+			if (target.hasItem('utilityumbrella')) return;
+			if (effect.id === 'meteorshower') {
+				this.damage(target.baseMaxhp / 8, target, target);
+			}
+		},
+		name: "Spatial Power",
+		rating: 3,
+		num: 991,
+	},
 	speedboost: {
 		onResidualOrder: 28,
 		onResidualSubOrder: 2,
@@ -5261,6 +5319,14 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Stance Change",
 		rating: 4,
 		num: 176,
+	},
+	starrysky: {
+		onStart(source) {
+			this.field.setWeather('meteorshower');
+		},
+		name: "Starry Sky",
+		rating: 4,
+		num: 996,
 	},
 	starstruck: {
 		onModifyMove(move, source) {
@@ -6418,6 +6484,17 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
         rating: 5,
         num: 913,
     },
+	wishingstar: {
+		onModifyCritRatioPriority: 12,
+		onModifyCritRatio(critRatio) {
+			if (this.field.isWeather(['meteorshower'])) {
+				return critRatio + 2;
+			}
+		},
+		name: "Wishing Star",
+		rating: 4,
+		num: 990,
+	},
 	wonderguard: {
 		onTryHit(target, source, move) {
 			if (target === source || move.category === 'Status' || move.type === '???' || move.id === 'struggle') return;
