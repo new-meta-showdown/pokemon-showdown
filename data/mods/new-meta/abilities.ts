@@ -1214,6 +1214,16 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 1,
 		num: 194,
 	},
+	enthusiasm: {
+		onBasePower(damage, source, target, move) {
+			if (target.runEffectiveness(move) > 1) {
+				return this.chainModify([4915, 4096]);
+			}
+		},
+		name: "Enthusiasm",
+		rating: 3.5,
+		num: 1026,
+	},
 	fairyaura: {
 		onStart(pokemon) {
 			if (this.suppressingAbility(pokemon)) return;
@@ -1392,6 +1402,17 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Fluffy",
 		rating: 3.5,
 		num: 218,
+	},
+	fluffybond: {
+		onTryHit(pokemon, target, move) {
+			if (move.flags['pivot']) {
+				this.add('-immune', pokemon, '[from] ability: Fluffy Bond');
+				return null;
+			}
+		},
+		name: "Fluffy Bond",
+		rating: 3,
+		num: 924,
 	},
 	forecast: {
 		onStart(pokemon) {
@@ -5131,6 +5152,18 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Victory Star",
 		rating: 2,
 		num: 162,
+	},
+	visionary: {
+		onBasePowerPriority: 23,
+		onBasePower(basePower, attacker, defender, move) {
+			if (move.flags['futuremove']) {
+				this.debug('Visionary boost');
+				return this.chainModify([5325, 4096]);
+			}
+		},
+		name: "Visionary",
+		rating: 3,
+		num: 925,
 	},
 	vitalspirit: {
 		onUpdate(pokemon) {
