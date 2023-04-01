@@ -792,6 +792,23 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 0,
 		num: 261,
 	},
+	curiousmedicine2: {
+        onStart(pokemon) {
+            for (const ally of pokemon.side.active) {
+                if (ally !== pokemon) {
+                    ally.clearBoosts();
+                    this.add('-clearboost', ally, '[from] ability: Curious Medicine', '[of] ' + pokemon);
+                }
+            }
+            for (const foes of pokemon.side.foe.active) {
+                foes.clearBoosts();
+                this.add('-clearboost', foes, '[from] ability: Curious Medicine', '[of] ' + pokemon);
+            }
+        },
+        name: "Curious Medicine",
+        rating: 0,
+        num: 916,
+    },
 	cursedbody: {
 		onDamagingHit(damage, target, source, move) {
 			if (source.volatiles['disable']) return;
