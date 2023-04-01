@@ -587,6 +587,33 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
         rating: 3,
         num: 970,
     },
+	carapace: {
+		onSourceModifyAtkPriority: 6,
+		onSourceModifyAtk(atk, attacker, defender, move) {
+			if (move.type === 'Rock') {
+				this.debug('Carapace weaken');
+				return this.chainModify(0.5);
+			}
+			if (move.type === 'Fighting') {
+				this.debug('Carapace strengthen');
+				return this.chainModify(2);
+			}
+		},
+		onSourceModifySpAPriority: 5,
+		onSourceModifySpA(atk, attacker, defender, move) {
+			if (move.type === 'Rock') {
+				this.debug('Carapace weaken');
+				return this.chainModify(0.5);
+			}
+			if (move.type === 'Fighting') {
+				this.debug('Carapace strengthen');
+				return this.chainModify(2);
+			}
+		},
+		name: "Carapace",
+		rating: 3,
+		num: 974,
+	},
 	catastrophic: {
 		//implemented in conditions.ts
 		name: "Catastrophic",
@@ -1852,6 +1879,16 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2,
 		num: 183,
 	},
+	gordianknot: {
+		onDamagingHit(damage, target, source, move) {
+			if (target.hasAbility("Gordian Knot") && this.checkMoveMakesContact(move, source, target)) {
+				source.addVolatile('gordiantrap');
+			}
+		},
+		name: "Gordian Knot",
+		rating: 2,
+		num: 976,
+	},
 	gorillatactics: {
 		onStart(pokemon) {
 			pokemon.abilityState.choiceLock = "";
@@ -2392,6 +2429,27 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 4,
 		num: 215,
 	},
+	innerdragon: {
+		onModifyMove(move) {
+			if(move.type === "Dragon") {
+				move.stab = 2.25;
+			}
+		},
+		onSourceModifyDamage(damage, source, target, move) {
+			console.log("moveValue: "+target.getMoveHitData(move).typeMod);
+			if (target.getMoveHitData(move).typeMod > 0) {
+				this.debug('Inner Dragon weaknesses applied');
+				return this.chainModify(2);
+			}
+			if (target.getMoveHitData(move).typeMod < 0) {
+				this.debug('Inner Dragon resistances applied');
+				return this.chainModify(0.5);
+			}
+		},
+		name: "Inner Dragon",
+		rating: 4,
+		num: 973,
+	},
 	innerfocus: {
 		onTryAddVolatile(status, pokemon) {
 			if (status.id === 'flinch') return null;
@@ -2478,6 +2536,21 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Iron Fist",
 		rating: 3,
 		num: 89,
+	},
+	jeweler: {
+		name: "Jeweler",
+		shortDesc: "This Pokemon's Gems are reusable and boost designated types by 1.5x",
+		onResidualOrder: 26,
+		onResidualSubOrder: 1,
+		onResidual(pokemon) {
+			if (pokemon.hp && !pokemon.item && this.dex.items.get(pokemon.lastItem).isGem) {
+				pokemon.setItem(pokemon.lastItem);
+				pokemon.lastItem = '';
+				this.add('-item', pokemon, pokemon.getItem(), '[from] ability: Jewler');
+			}
+		},
+		rating: 3.5,
+		num: 977,
 	},
 	justified: {
 		onDamagingHit(damage, target, source, move) {
@@ -4216,6 +4289,25 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 1,
 		num: 155,
 	},
+	razorrotors: {
+		onModifyAtkPriority: 5,
+		onModifyAtk(atk, attacker, defender, move) {
+			if (move.type === 'flying') {
+				this.debug('Razor Rotors boost');
+				return this.chainModify(1.5);
+			}
+		},
+		onModifySpAPriority: 5,
+		onModifySpA(atk, attacker, defender, move) {
+			if (move.type === 'flying') {
+				this.debug('Razor Rotors boost');
+				return this.chainModify(1.5);
+			}
+		},
+		name: "Razor Rotors",
+		rating: 3.5,
+		num: 975,
+	},
 	receiver: {
 		onAllyFaint(target) {
 			if (!this.effectState.target.hp) return;
@@ -5853,6 +5945,28 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Vessel of Ruin",
 		rating: 4.5,
 		num: 284,
+	},
+	vicarious: {
+		onFoeTryBoost(boost, target, source, effect) {
+			if (effect.id === 'vicarious') return;
+			let b: BoostID;
+			for (b in boost) {
+				if (target.boosts[b] === -6) continue;
+				const negativeBoost: SparseBoostsTable = {};
+				negativeBoost[b] = boost[b];
+				delete boost[b];
+				for (const target2 of target.side.foe.active) {
+					if (target2.hasAbility('vicarious')) {
+						this.add('-ability', target2, 'Vicarious');
+						this.boost(negativeBoost, target2);
+						this.boost(negativeBoost, source);
+					}
+				}
+			}
+		},
+		name: "Vicarious",
+		rating: 4,
+		num: 972,
 	},
 	victorystar: {
 		onAnyModifyAccuracyPriority: -1,
