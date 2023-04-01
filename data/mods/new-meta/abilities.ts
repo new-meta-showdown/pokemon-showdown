@@ -471,6 +471,23 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2,
 		num: 66,
 	},
+	blazeroar: {
+		onModifyTypePriority: -1,
+		onModifyType(move, pokemon) {
+			if (move.flags['sound'] && !pokemon.volatiles['dynamax']) { // hardcode
+				move.type = 'Fire';
+			}
+		},
+		onBasePower(basePower, attacker, defender, move) {
+			if (move.flags['sound']) {
+				this.debug('Blaze Roar boost');
+				return this.chainModify(1.1);
+			}
+		},
+		name: "Blaze Roar",
+		rating: 1.5,
+		num: 928,
+	},
 	bloodsucker: {
         onModifyMove(move) {
             if (move.flags['bite']) {
@@ -1482,6 +1499,20 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Forewarn",
 		rating: 0.5,
 		num: 108,
+	},
+	fortitude: {
+		onAfterMoveSecondary(target, source, move) {
+			if (!source || source === target || !target.hp || !move.totalDamage) return;
+			const lastAttackedBy = target.getLastAttackedBy();
+			if (!lastAttackedBy) return;
+			const damage = move.multihit ? move.totalDamage : lastAttackedBy.damage;
+			if (target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2) {
+				this.boost({def: 1, spd: 1});
+			}
+		},
+		name: "Fortitude",
+		rating: 2,
+		num: 932,
 	},
 	friendguard: {
 		name: "Friend Guard",
@@ -3859,6 +3890,23 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 0,
 		num: 50,
 	},
+	sacredlight: {
+        onStart(pokemon) {
+			const target = pokemon.side.foe.active[pokemon.side.foe.active.length - 1 - pokemon.position];
+			target.side.foe.addSideCondition('safeguard');
+        },
+        onSwitchOut(pokemon) {
+			const target = pokemon.side.foe.active[pokemon.side.foe.active.length - 1 - pokemon.position];
+            target.side.foe.removeSideCondition('safeguard');
+        },
+        onFaint(pokemon) {
+			const target = pokemon.side.foe.active[pokemon.side.foe.active.length - 1 - pokemon.position];
+            target.side.foe.removeSideCondition('safeguard');
+        },
+        name: "Sacred Light",
+        rating: 3,
+        num: 931,
+    },
 	sandforce: {
 		onBasePowerPriority: 21,
 		onBasePower(basePower, attacker, defender, move) {
@@ -4550,6 +4598,18 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3.5,
 		num: 173,
 	},
+	strongwinds: {
+		onBasePowerPriority: 23,
+		onBasePower(basePower, attacker, defender, move) {
+			if (move.flags['wind']) {
+				this.debug('Strong Winds boost');
+				return this.chainModify(1.2);
+			}
+		},
+		name: "Strong Winds",
+		rating: 3,
+		num: 929,
+	},
 	sturdy: {
 		onTryHit(pokemon, target, move) {
 			if (move.ohko) {
@@ -4598,6 +4658,25 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Super Luck",
 		rating: 1.5,
 		num: 105,
+	},
+	supernova: {
+		onModifyAtkPriority: 5,
+		onModifyAtk(atk, attacker, defender, move) {
+			if (move.type === 'Cosmic' && attacker.hp <= attacker.maxhp / 3) {
+				this.debug('Supernova boost');
+				return this.chainModify(1.5);
+			}
+		},
+		onModifySpAPriority: 5,
+		onModifySpA(atk, attacker, defender, move) {
+			if (move.type === 'Cosmic' && attacker.hp <= attacker.maxhp / 3) {
+				this.debug('Supernova boost');
+				return this.chainModify(1.5);
+			}
+		},
+		name: "Supernova",
+		rating: 2,
+		num: 930,
 	},
 	supremeoverlord: {
 		onStart(pokemon) {
