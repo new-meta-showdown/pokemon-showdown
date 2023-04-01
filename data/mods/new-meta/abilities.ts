@@ -2116,6 +2116,18 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 0.5,
 		num: 51,
 	},
+	kicker: {
+        onBasePowerPriority: 23,
+        onBasePower(basePower, attacker, defender, move) {
+            if (move.flags['kick']) {
+                this.debug('Kicker boost');
+								return this.chainModify([4915, 4096]);
+            }
+        },
+        name: "Kicker",
+        rating: 3,
+        num: 91,
+    },
 	klutz: {
 		// Item suppression implemented in Pokemon.ignoringItem() within sim/pokemon.js
 		onStart(pokemon) {
