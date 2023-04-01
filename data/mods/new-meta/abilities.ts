@@ -1214,7 +1214,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 1,
 		num: 194,
 	},
-	enthusiasm: {
+		enthusiasm: {
 		onBasePower(damage, source, target, move) {
 			if (target.runEffectiveness(move) > 1) {
 				return this.chainModify([4915, 4096]);
@@ -1222,7 +1222,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		name: "Enthusiasm",
 		rating: 3.5,
-		num: 1026,
+		num: 926,
 	},
 	fairyaura: {
 		onStart(pokemon) {
@@ -1820,6 +1820,16 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Honey Gather",
 		rating: 0,
 		num: 118,
+	},
+	hubris: {
+		onSourceAfterFaint(length, target, source, effect) {
+			if (effect && effect.effectType === 'Move') {
+				this.boost({spa: length}, source);
+			}
+		},
+		name: "Hubris",
+		rating: 3,
+		num: 927,
 	},
 	hugepower: {
 		onModifyAtkPriority: 5,
