@@ -1425,6 +1425,15 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2,
 		num: 59,
 	},
+	forestembrace: {
+		onStart(pokemon) {
+			if (!pokemon.setType('Grass')) return false;
+			this.add('-start', pokemon, 'typechange', 'Grass', '[from] ability: Forest Embrace');
+		},
+		name: "Forest Embrace",
+		rating: 0,
+		num: 920,
+	},
 	forewarn: {
 		onStart(pokemon) {
 			let warnMoves: (Move | Pokemon)[][] = [];
