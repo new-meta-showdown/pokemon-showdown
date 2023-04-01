@@ -4429,6 +4429,17 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 1,
 		num: 21,
 	},
+	sunbathe: {
+        onWeather(target, source, effect) {
+            if (target.hasItem('utilityumbrella')) return;
+            if (effect.id === 'sunnyday' || effect.id === 'desolateland') {
+                this.heal(target.baseMaxhp / 16);
+            }
+        },
+        name: "Sunbathe",
+        rating: 1.5,
+        num: 912,
+    },
 	superluck: {
 		onModifyCritRatio(critRatio) {
 			return critRatio + 1;
