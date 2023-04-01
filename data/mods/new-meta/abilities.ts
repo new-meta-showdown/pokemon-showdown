@@ -1057,6 +1057,27 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3.5,
 		num: 209,
 	},
+	divineguard: {
+		onTryHit(target, source, move) {
+			if (target === source || move.category === 'Status' || move.type === '???' || move.id === 'struggle') return;
+			if (move.id === 'skydrop' && !source.volatiles['skydrop']) return;
+			this.debug('Divine Guard immunity: ' + move.id);
+			console.log("move.type: "+move.type);
+			console.log("effectiveness: "+target.runEffectiveness(move));
+			console.log("smartTarget: "+move.smartTarget);
+			if (target.runEffectiveness(move) >= 0) {
+				if (move.smartTarget) {
+					move.smartTarget = false;
+				} else {
+					this.add('-immune', target, '[from] ability: Divine Guard');
+				}
+				return null;
+			}
+		},
+		name: "Divine Guard",
+		rating: 5,
+		num: 935,
+	},
 	download: {
 		onStart(pokemon) {
 			let totaldef = 0;
@@ -2011,8 +2032,14 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		num: 246,
 	},
 	illuminate: {
+		onSourceModifyAccuracyPriority: 9,
+		onSourceModifyAccuracy(accuracy) {
+			if (typeof accuracy !== 'number') return;
+			this.debug('Illuminate - enhancing accuracy');
+			return this.chainModify([5325, 4096]);
+		},
 		name: "Illuminate",
-		rating: 0,
+		rating: 3,
 		num: 35,
 	},
 	illusion: {
@@ -2748,6 +2775,24 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2,
 		num: 298,
 	},
+	mythicarcher: {
+		onModifyMovePriority: 22,
+		onModifyMove(move) {
+			if (move.category === "Physical" && !move.flags['contact']) {
+				move.category = "Special";
+			}
+		},
+		onBasePowerPriority: 23,
+		onBasePower(basePower, attacker, defender, move) {
+			if (move.category === "Physical" && !move.flags['contact']) {
+				this.debug('Magical Archer boost');
+				return this.chainModify([4506, 4096]);
+			}
+		},
+		name: "Mythic Archer",
+		rating: 3,
+		num: 933,
+	},
 	naturalcure: {
 		onCheckShow(pokemon) {
 			// This is complicated
@@ -3370,6 +3415,20 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Prankster",
 		rating: 4,
 		num: 158,
+	},
+	predator: {
+		onBasePowerPriority: 24,
+		onBasePower(basePower, attacker, defender, move) {
+			if (attacker.gender && defender.gender) {
+				if (attacker.weighthg > defender.weighthg) {
+					this.debug('Predator boost');
+					return this.chainModify(1.25);
+				}
+			}
+		},
+		name: "Predator",
+		rating: 0,
+		num: 934,
 	},
 	pressure: {
 		onStart(pokemon) {
