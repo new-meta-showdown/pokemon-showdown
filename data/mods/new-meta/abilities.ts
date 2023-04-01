@@ -3107,6 +3107,34 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 1,
 		num: 253,
 	},
+	perseverance: {
+        onBasePowerPriority: 7,
+        onBasePower(basePower, pokemon, target, move) {
+            if (pokemon.side.pokemonLeft === 1) {
+                return this.chainModify(1.25);
+            }
+        },
+        onModifyDefPriority: 6,
+        onModifyDef(def, pokemon) {
+            if (pokemon.side.pokemonLeft === 1) {
+                return this.chainModify(1.25);
+            }
+        },
+        onModifySpDPriority: 6,
+        onModifySpD(spd, pokemon) {
+            if (pokemon.side.pokemonLeft === 1) {
+                return this.chainModify(1.25);
+            }
+        },
+        onStart(pokemon) {
+            if (pokemon.side.pokemonLeft === 1) {
+                this.add('-ability', pokemon, 'Perseverance');
+            }
+        },
+        name: "Perseverance",
+        rating: 4,
+        num: 923,
+    },
 	pickpocket: {
 		onAfterMoveSecondary(target, source, move) {
 			if (source && source !== target && move?.flags['contact']) {
