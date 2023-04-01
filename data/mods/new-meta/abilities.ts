@@ -1111,6 +1111,22 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3,
 		num: 87,
 	},
+	dynamo: {
+        onModifyMove(move) {
+            if (!move || !move.flags['contact'] || move.target === 'self') return;
+            if (!move.secondaries) {
+                move.secondaries = [];
+            }
+            move.secondaries.push({
+                chance: 30,
+                status: 'par',
+                ability: this.dex.abilities.get('dynamo'),
+            });
+        },
+        name: "Dynamo",
+        rating: 3,
+        num: 907,
+    },
 	earlybird: {
 		name: "Early Bird",
 		// Implemented in statuses.js
