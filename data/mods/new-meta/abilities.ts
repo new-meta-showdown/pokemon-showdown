@@ -5253,6 +5253,15 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		// We do not want Brambleghast to get Infiltrator in Randbats
 		num: 274,
 	},
+	wisepower: {
+        onModifySpAPriority: 5,
+        onModifySpA(spa) {
+            return this.chainModify(2);
+        },
+        name: "Wise Power",
+        rating: 5,
+        num: 913,
+    },
 	wonderguard: {
 		onTryHit(target, source, move) {
 			if (target === source || move.category === 'Status' || move.type === '???' || move.id === 'struggle') return;
