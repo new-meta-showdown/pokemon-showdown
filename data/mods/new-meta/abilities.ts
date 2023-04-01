@@ -1331,6 +1331,36 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3,
 		num: 187,
 	},
+	familybonds: {
+		onModifyMove(move, source, target) {
+			const type1 = source.types[0];
+			const type2 = source.types[1];
+			if (source.side.active.length === 1) {
+				return;
+			}
+			for (const allyActive of source.side.active) {
+				if (source.getTypes().length === 2) {
+					if (
+						allyActive && allyActive.position !== source.position &&
+						!allyActive.fainted && (allyActive.hasType(type1) || allyActive.hasType(type2))
+					) {
+						move.stab = 1.5 * 1.4;
+					}
+				}
+				if (source.getTypes().length === 1) {
+					if (
+						allyActive && allyActive.position !== source.position &&
+						!allyActive.fainted && (allyActive.hasType(type1))
+					) {
+						move.stab = 1.5 * 1.4;
+					}
+				}
+			}
+		},
+		name: "Family Bonds",
+		rating: 0,
+		num: 954,
+	},
 	filter: {
 		onSourceModifyDamage(damage, source, target, move) {
 			if (target.getMoveHitData(move).typeMod > 0) {
@@ -2126,6 +2156,19 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Ice Scales",
 		rating: 4,
 		num: 246,
+	},
+	ignition: {
+		onTryHit(target, source, move) {
+			if (target !== source && move.type === 'Fire') {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Ignition');
+				}
+				return null;
+			}
+		},
+		name: "Ignition",
+		rating: 3.5,
+		num: 957,
 	},
 	illuminate: {
 		onSourceModifyAccuracyPriority: 9,
@@ -3307,6 +3350,42 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
         rating: 2.5,
         num: 922,
     },
+	paralyzingvenom: {
+		onModifyMove(move, source, target) {
+			if (!move.secondaries) {
+				move.secondaries = [];
+			}
+			let paralyzingvenomMove = false;
+			let parChance;
+			for (const secondary of move.secondaries) {
+				if (!target) return;
+				if ((secondary.status == 'tox' || secondary.status == 'psn') && !target.hasType('Steel')) {
+					paralyzingvenomMove = true;
+					parChance = secondary.chance;
+					move.secondaries = [];
+					move.secondaries.push({
+						chance: parChance,
+						status: 'par',
+						ability: this.dex.abilities.get('paralyzingvenom'),
+					});
+				}
+			}
+			if (!move.status) return;
+			if (!target) return;
+			if ((move.status == 'tox' || move.status == 'psn') && !target.hasType('Steel')) {
+				paralyzingvenomMove = true;
+				move.secondaries = [];
+					move.secondaries.push({
+						chance: 100,
+						status: 'par',
+						ability: this.dex.abilities.get('paralyzingvenom'),
+					});
+			}
+		},
+		name: "Paralyzing Venom",
+		rating: 2,
+		num: 953,
+	},
 	parentalbond: {
 		onPrepareHit(source, target, move) {
 			if (move.category === 'Status' || move.multihit || move.flags['noparentalbond'] || move.flags['charge'] ||
@@ -4043,6 +4122,19 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Regenerator",
 		rating: 4.5,
 		num: 144,
+	},
+	remorse: {
+		name: "Remorse",
+		onDamagingHitOrder: 1,
+		onDamagingHit(damage, target, source, move) {
+			if (!target.hp) {
+				this.add('-ability', target, 'Remorse', 'boost');
+				this.boost({atk: -1}, source, target, null, true);
+				this.boost({spa: -1}, source, target, null, true);
+			}
+		},
+		rating: 2.5,
+		num: 955,
 	},
 	ripen: {
 		onTryHeal(damage, target, source, effect) {
@@ -5238,6 +5330,14 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3.5,
 		num: 47,
 	},
+	thunderdelight: {
+		onFoeDamagingHit(damage, target, source, move) {
+			if (move.type === 'Electric') this.heal(source.baseMaxhp / 10, source);
+		},
+		name: "Thunder Delight",
+		rating: 3,
+		num: 956,
+	},
 	timereverse: {
         onStart(pokemon) {
             this.actions.useMove("lazyencore", pokemon);
@@ -5585,6 +5685,16 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Visionary",
 		rating: 3,
 		num: 925,
+	},
+	vitalitydrain: {
+		onSourceAfterFaint(length, target, source, effect) {
+			if (effect && effect.effectType === 'Move') {
+				this.heal(source.baseMaxhp / 4, source);
+			}
+		},
+		name: "Vitality Drain",
+		rating: 3,
+		num: 952,
 	},
 	vitalspirit: {
 		onUpdate(pokemon) {
