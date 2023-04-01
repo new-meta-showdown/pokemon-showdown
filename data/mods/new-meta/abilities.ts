@@ -4103,6 +4103,23 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 1.5,
 		num: 81,
 	},
+	snowpacking: {
+        onModifyAtkPriority: 5,
+        onModifyAtk(atk, pokemon) {
+            if (['hail', 'snow'].includes(pokemon.effectiveWeather())) {
+                return this.chainModify(1.5);
+            }
+        },
+        onWeather(target, source, effect) {
+            if (target.hasItem('utilityumbrella')) return;
+            if (effect.id === 'hail' || effect.id === 'snow') {
+                this.damage(target.baseMaxhp / 8, target, target);
+            }
+        },
+        name: "Snow Packing",
+        rating: 2,
+        num: 910,
+    },
 	snowwarning: {
 		onStart(source) {
 			this.field.setWeather('snow');
