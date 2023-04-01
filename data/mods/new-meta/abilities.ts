@@ -48,7 +48,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		name: "Acceleration",
 		rating: 4,
-		num: 980,
+		num: 979,
 	},
 	adaptability: {
 		onModifyMove(move) {
@@ -621,7 +621,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
         },
         name: "Camper",
         rating: 3,
-        num: 970,
+        num: 969,
     },
 	carapace: {
 		onSourceModifyAtkPriority: 6,
@@ -648,7 +648,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		name: "Carapace",
 		rating: 3,
-		num: 974,
+		num: 973,
 	},
 	catastrophic: {
 		//implemented in conditions.ts
@@ -1985,7 +1985,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		name: "Gordian Knot",
 		rating: 2,
-		num: 976,
+		num: 975,
 	},
 	gorillatactics: {
 		onStart(pokemon) {
@@ -2137,7 +2137,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		name: "Happy Spiker",
 		rating: 0,
-		num: 971,
+		num: 970,
 	},
 	harvest: {
 		name: "Harvest",
@@ -2313,7 +2313,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		//implemented in conditions.ts
 		name: "Hydrothermal",
 		rating: 1.5,
-		num: 969,
+		num: 968,
 	},
 	hypercutter: {
 		onTryBoost(boost, target, source, effect) {
@@ -2561,7 +2561,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		name: "Inner Dragon",
 		rating: 4,
-		num: 973,
+		num: 972,
 	},
 	innerfocus: {
 		onTryAddVolatile(status, pokemon) {
@@ -2663,7 +2663,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			}
 		},
 		rating: 3.5,
-		num: 977,
+		num: 976,
 	},
 	justified: {
 		onDamagingHit(damage, target, source, move) {
@@ -3465,7 +3465,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		isBreakable: true,
 		rating: 4,
-		num: 978,
+		num: 977,
 	},
 	oblivious: {
 		onUpdate(pokemon) {
@@ -4462,7 +4462,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		name: "Razor Rotors",
 		rating: 3.5,
-		num: 975,
+		num: 974,
 	},
 	receiver: {
 		onAllyFaint(target) {
@@ -4640,7 +4640,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				pokemon.addVolatile('ingrain');
 		},
 		rating: 2,
-		num: 979,
+		num: 978,
 	},
 	roughskin: {
 		onDamagingHitOrder: 1,
@@ -4884,7 +4884,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		name: "Seer",
 		rating: 3,
-		num: 968,
+		num: 967,
 	},
 	serenegrace: {
 		onModifyMovePriority: -2,
@@ -5334,7 +5334,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		name: "Starstruck",
 		rating: 3,
-		num: 981,
+		num: 980,
 	},
 	static: {
 		onDamagingHit(damage, target, source, move) {
@@ -6196,7 +6196,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		name: "Vicarious",
 		rating: 4,
-		num: 972,
+		num: 971,
 	},
 	victorystar: {
 		onAnyModifyAccuracyPriority: -1,
