@@ -552,6 +552,44 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3,
 		num: 171,
 	},
+	catastrophic: {
+		//implemented in conditions.ts
+		name: "Catastrophic",
+		rating: 1.5,
+		num: 962,
+	},
+	chainstriker: {
+		onStart(pokemon) {
+			pokemon.addVolatile('chainstriker');
+		},
+		condition: {
+			onStart(pokemon) {
+				this.effectState.numConsecutive = 0;
+				this.effectState.lastMove = '';
+			},
+			onTryMovePriority: -2,
+			onTryMove(pokemon, target, move) {
+				if (!pokemon.hasAbility('chainstriker')) {
+					pokemon.removeVolatile('chainstriker');
+					return;
+				}
+				if (this.effectState.lastMove === move.id && pokemon.moveLastTurnResult) {
+					this.effectState.numConsecutive++;
+				} else {
+					this.effectState.numConsecutive = 0;
+				}
+				this.effectState.lastMove = move.id;
+			},
+			onModifyDamage(damage, source, target, move) {
+				const dmgMod = [0x1000, 0x1333, 0x1666, 0x1999, 0x1CCC, 0x2000];
+				const numConsecutive = this.effectState.numConsecutive > 5 ? 5 : this.effectState.numConsecutive;
+				return this.chainModify([dmgMod[numConsecutive], 0x1000]);
+			},
+		},
+		name: "Chain Striker",
+		rating: 3.5,
+		num: 958,
+	},
 	cheekpouch: {
 		onEatItem(item, pokemon) {
 			this.heal(pokemon.baseMaxhp / 3);
@@ -3598,6 +3636,22 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 0,
 		num: 57,
 	},
+	poisoncloak: {
+		onImmunity(type, pokemon) {
+			if (type === 'toxiccloud') return false;
+		},
+		onModifyAccuracyPriority: 8,
+		onModifyAccuracy(accuracy) {
+			if (typeof accuracy !== 'number') return;
+			if (this.field.isWeather('toxiccloud')) {
+				this.debug('Poison Cloak - decreasing accuracy');
+				return accuracy * 0.8;
+			}
+		},
+		name: "Poison Cloak",
+		rating: 1.5,
+		num: 959,
+	},
 	poisonheal: {
 		onDamagePriority: 1,
 		onDamage(damage, target, source, effect) {
@@ -3920,6 +3974,33 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Purifying Salt",
 		rating: 4,
 		num: 272,
+	},
+	pyrotoxin: {
+		onModifyAtkPriority: 5,
+		onModifyAtk(atk, attacker, defender, move) {
+			if (move.type === 'Fire' && (defender.status === 'tox' || defender.status === 'psn')) {
+				this.debug('Pyrotoxin boost');
+				return this.chainModify(1.3);
+			}
+			if (move.type === 'Poison' && defender.status === 'brn') {
+				this.debug('Pyrotoxin boost');
+				return this.chainModify(1.3);
+			}
+		},
+		onModifySpAPriority: 5,
+		onModifySpA(atk, attacker, defender, move) {
+			if (move.type === 'Fire' && (defender.status === 'tox' || defender.status === 'psn')) {
+				this.debug('Pyrotoxin boost');
+				return this.chainModify(1.3);
+			}
+			if (move.type === 'Poison' && defender.status === 'brn') {
+				this.debug('Pyrotoxin boost');
+				return this.chainModify(1.3);
+			}
+		},
+		name: "Pyrotoxin",
+		rating: 4,
+		num: 961,
 	},
 	quarkdrive: {
 		onStart(pokemon) {
@@ -5338,6 +5419,12 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3,
 		num: 956,
 	},
+	tightgrip: {
+		//implemented in conditions.ts
+		name: "Tight Grip",
+		rating: 1.5,
+		num: 960,
+	},
 	timereverse: {
         onStart(pokemon) {
             this.actions.useMove("lazyencore", pokemon);
@@ -5553,6 +5640,18 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Turboblaze",
 		rating: 3,
 		num: 163,
+	},
+	twinned: {
+		onModifyMove(move, pokemon) {
+			move.target = "allAdjacentFoes";
+		},
+		onBasePowerPriority: 21,
+		onBasePower(basePower, pokemon, target, move) {
+			return this.chainModify(0.75);
+		},
+		name: "Twinned",
+		rating: 3.5,
+		num: 963,
 	},
 	unaware: {
 		name: "Unaware",

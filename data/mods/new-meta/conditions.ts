@@ -262,6 +262,7 @@ export const Conditions: {[k: string]: ConditionData} = {
 		duration: 5,
 		durationCallback(target, source) {
 			if (source?.hasItem('gripclaw')) return 8;
+			if (source?.hasAbility('tightgrip')) return 8;
 			return this.random(5, 7);
 		},
 		onStart(pokemon, source) {
@@ -684,7 +685,11 @@ export const Conditions: {[k: string]: ConditionData} = {
 			if (this.field.isWeather('sandstorm')) this.eachEvent('Weather');
 		},
 		onWeather(target) {
-			this.damage(target.baseMaxhp / 16);
+			if (target?.hasAbility('catastrophic')) {
+				this.damage(target.baseMaxhp / 8);
+			} else {
+				this.damage(target.baseMaxhp / 16);
+			}
 		},
 		onFieldEnd() {
 			this.add('-weather', 'none');
