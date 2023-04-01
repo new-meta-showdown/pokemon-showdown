@@ -768,6 +768,56 @@ export const Conditions: {[k: string]: ConditionData} = {
 			this.add('-weather', 'none');
 		},
 	},
+	toxiccloud: {
+		name: 'Toxic Cloud',
+		effectType: 'Weather',
+		duration: 5,
+		durationCallback(source, effect) {
+			if (source?.hasItem('poisonrock')) {
+				return 8;
+			}
+			return 5;
+		},
+		onWeatherModifyDamage(damage, attacker, defender, move) {
+			if (defender.hasItem('utilityumbrella')) return;
+			if (move.type === 'Poison') {
+				this.debug('Toxic Cloud poison boost');
+				return this.chainModify(1.5);
+			}
+		},
+		onFieldStart(battle, source, effect) {
+			if (effect?.effectType === 'Ability') {
+				if (this.gen <= 5) this.effectState.duration = 0;
+				this.add('-weather', 'Toxic Cloud', '[from] ability: ' + effect, '[of] ' + source);
+			} else {
+				this.add('-weather', 'Toxic Cloud');
+			}
+		},
+		onFieldResidualOrder: 1,
+		onFieldResidual() {
+			this.add('-weather', 'Toxic Cloud', '[upkeep]');
+			if (this.field.isWeather('toxiccloud')) this.eachEvent('Weather');
+		},
+		onWeather(target, source, effect) {
+			if (target.side.getSideCondition('antidote')) return;
+			if (target.hasAbility('poisonheal')) return;
+			if (target.hasAbility('immunity')) return;
+			if (target.hasAbility('toxicboost')) return;
+			if(target.hasAbility('toxicintake')) {
+				if(target.hasItem("utilityUbmrella"))return;
+				else this.heal(target.baseMaxhp /16);
+			}
+			if (target?.hasAbility('catastrophic')) {
+				this.damage(target.baseMaxhp / 8);
+			}
+			else {
+				this.damage(target.baseMaxhp / 16);
+			}
+		},
+		onFieldEnd(pokemon) {
+			this.add('-weather', 'none');
+		},
+	},
 
 	dynamax: {
 		name: 'Dynamax',

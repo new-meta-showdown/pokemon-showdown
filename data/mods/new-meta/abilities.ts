@@ -4839,6 +4839,27 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3.5,
 		num: 295,
 	},
+	toxicrush: {
+		onModifySpe(spe, pokemon) {
+			if (this.field.isWeather('toxiccloud')) {
+				return this.chainModify(2);
+			}
+		},
+		onImmunity(type, pokemon) {
+			if (type === 'toxiccloud') return false;
+		},
+		name: "Toxic Rush",
+		rating: 3,
+		num: 918,
+	},
+	toxicwasteland: {
+		onStart(source) {
+			this.field.setWeather('toxiccloud');
+		},
+		name: "Toxic Wasteland",
+		rating: 4,
+		num: 919,
+	},
 	trace: {
 		onStart(pokemon) {
 			// n.b. only affects Hackmons
