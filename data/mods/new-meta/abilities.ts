@@ -488,6 +488,40 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 1.5,
 		num: 928,
 	},
+	blizzardgift: {
+		onStart(pokemon) {
+			delete this.effectState.forme;
+		},
+		onUpdate(pokemon) {
+			if (!pokemon.isActive || pokemon.baseSpecies.baseSpecies !== 'Yetitan' || pokemon.transformed) return;
+			if (['hail'].includes(pokemon.effectiveWeather())) {
+				if (pokemon.species.id !== 'yetitanblizzard') {
+					pokemon.formeChange('Yetitan-Blizzard', this.effect, false, '[msg]');
+				}
+			} else {
+				if (pokemon.species.id === 'yetitanblizzard') {
+					pokemon.formeChange('Yetitan', this.effect, false, '[msg]');
+				}
+			}
+		},
+		onAllyModifyAtkPriority: 3,
+		onAllyModifyAtk(atk, pokemon) {
+			if (this.effectState.target.baseSpecies.baseSpecies !== 'Yetitan') return;
+			if (['hail'].includes(pokemon.effectiveWeather())) {
+				return this.chainModify(1.5);
+			}
+		},
+		onAllyModifySpDPriority: 4,
+		onAllyModifySpD(spd, pokemon) {
+			if (this.effectState.target.baseSpecies.baseSpecies !== 'Yetitan') return;
+			if (['hail'].includes(pokemon.effectiveWeather())) {
+				return this.chainModify(1.5);
+			}
+		},
+		name: "Blizzard Gift",
+		rating: 1,
+		num: 946,
+	},
 	bloodsucker: {
         onModifyMove(move) {
             if (move.flags['bite']) {
@@ -1252,7 +1286,26 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 1,
 		num: 194,
 	},
-		enthusiasm: {
+	enchantment: {
+		onModifyAtkPriority: 5,
+		onModifyAtk(atk, attacker, defender, move) {
+			if (move.type === 'Fairy' && attacker.hp <= attacker.maxhp / 3) {
+				this.debug('Enchantment boost');
+				return this.chainModify(1.5);
+			}
+		},
+		onModifySpAPriority: 5,
+		onModifySpA(atk, attacker, defender, move) {
+			if (move.type === 'Fairy' && attacker.hp <= attacker.maxhp / 3) {
+				this.debug('Enchantment boost');
+				return this.chainModify(1.5);
+			}
+		},
+		name: "Enchantment",
+		rating: 2,
+		num: 950,
+	},
+	enthusiasm: {
 		onBasePower(damage, source, target, move) {
 			if (target.runEffectiveness(move) > 1) {
 				return this.chainModify([4915, 4096]);
@@ -3215,6 +3268,33 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 1.5,
 		num: 20,
 	},
+	pantheon: {
+		onStart(source) {
+			if (source.side.active.length === 1) {
+				return;
+			}
+			for (const allyActive of source.side.active) {
+				if (
+					allyActive && allyActive.position !== source.position &&
+					!allyActive.fainted && allyActive.hasAbility(['pantheon'])
+				) {
+					let statName = 'atk';
+					let bestStat = 0;
+					let s: StatIDExceptHP;
+					for (s in source.storedStats) {
+						if (source.storedStats[s] > bestStat) {
+							statName = s;
+							bestStat = source.storedStats[s];
+						}
+					}
+					this.boost({[statName]: 1}, source);
+				}
+			}
+		},
+		name: "Pantheon",
+		rating: 0,
+		num: 949,
+	},
 	parasite: {
         onTryHealPriority: 1,
         onTryHeal(damage, target, source, effect) {
@@ -3346,6 +3426,25 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
         rating: 4,
         num: 923,
     },
+	phytogenetic: {
+		onModifyAtkPriority: 5,
+		onModifyAtk(atk, attacker, defender, move) {
+			if (move.type === 'Grass') {
+				this.debug('Phytogenetic boost');
+				return this.chainModify(1.5);
+			}
+		},
+		onModifySpAPriority: 5,
+		onModifySpA(atk, attacker, defender, move) {
+			if (move.type === 'Grass') {
+				this.debug('Phytogenetic boost');
+				return this.chainModify(1.5);
+			}
+		},
+		name: "Phytogenetic",
+		rating: 3.5,
+		num: 947,
+	},
 	pickpocket: {
 		onAfterMoveSecondary(target, source, move) {
 			if (source && source !== target && move?.flags['contact']) {
@@ -4052,6 +4151,25 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Run Away",
 		rating: 0,
 		num: 50,
+	},
+	rushdown: {
+		onModifyAtkPriority: 5,
+		onModifyAtk(atk, attacker, defender, move) {
+			if (attacker.activeMoveActions <= 1) {
+				this.debug('Rushdown boost');
+				return this.chainModify(1.5);
+			}
+		},
+		onModifySpAPriority: 5,
+		onModifySpA(atk, attacker, defender, move) {
+			if (attacker.activeMoveActions <= 1) {
+				this.debug('Rushdown boost');
+				return this.chainModify(1.5);
+			}
+		},
+		name: "Rushdown",
+		rating: 2,
+		num: 951,
 	},
 	sacredlight: {
         onStart(pokemon) {
@@ -5273,6 +5391,29 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Transistor",
 		rating: 3.5,
 		num: 262,
+	},
+	transmutation: {
+		onSetStatus(status, target, source, effect) {
+			if (status.id === 'psn' || status.id === 'tox') {
+				this.add('-start', target, 'typechange', 'Poison', '[from] ability: Transmutation');
+			}
+			if (status.id === 'brn') {
+				this.add('-start', target, 'typechange', 'Fire', '[from] ability: Transmutation');
+			}
+			if (status.id === 'par') {
+				this.add('-start', target, 'typechange', 'Electric', '[from] ability: Transmutation');
+			}
+			if (status.id === 'slp') {
+				this.add('-start', target, 'typechange', 'Psychic', '[from] ability: Transmutation');
+			}
+			if (status.id === 'frz') {
+				this.add('-start', target, 'typechange', 'Ice', '[from] ability: Transmutation');
+			}
+			return false;
+		},
+		name: "Transmutation",
+		rating: 3,
+		num: 948,
 	},
 	triage: {
 		onModifyPriority(priority, pokemon, target, move) {
