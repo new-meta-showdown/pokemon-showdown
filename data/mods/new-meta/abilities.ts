@@ -575,6 +575,14 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
         rating: 3,
         num: 909,
     },
+	breakneck: {
+		onModifyPriority(priority, pokemon, target, move) {
+			if (move?.basePower <= 60) return priority + 1;
+		},
+		name: "Breakneck",
+		rating: 3,
+		num: 984,
+	},
 	bulletproof: {
 		onTryHit(pokemon, target, move) {
 			if (move.flags['bullet']) {
@@ -630,6 +638,23 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Catastrophic",
 		rating: 1.5,
 		num: 962,
+	},
+	cauterize: {
+		onAfterMoveSecondary(target, source, move) {
+			if (!source || source === target || !target.hp || !move.totalDamage) return;
+			const lastAttackedBy = target.getLastAttackedBy();
+			if (!lastAttackedBy) return;
+			const damage = move.multihit ? move.totalDamage : lastAttackedBy.damage;
+			if (target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2) {
+				source.side.addSideCondition('magmabath'); //supposed to be a side condition? matters for doubles
+			}
+		},
+		onSourceSwitchOut(source){
+		  source.side.removeSideCondition('magmabath'); //clear side condition when pokemon leaves
+		},
+		name: "Cauterize",
+		rating: 2,
+		num: 985,
 	},
 	chainstriker: {
 		onStart(pokemon) {
@@ -880,6 +905,32 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Corrosion",
 		rating: 2.5,
 		num: 212,
+	},
+	cosmersion: {
+		onTryHit(target, source, move) {
+			if (target !== source && move.type === 'cosmic') {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Cosmersion');
+				}
+				return null;
+			}
+		},
+		isBreakable: true,
+		name: "Cosmersion",
+		rating: 3.5,
+		num: 986,
+	},
+	cosmicforce: {
+		onBasePowerPriority: 21,
+		onBasePower(basePower, attacker, defender, move) {
+			if (this.field.getPseudoWeather('gravity')) {
+					this.debug('Cosmic Force boost');
+					return this.chainModify([5325, 4096]);
+			}
+		},
+		name: "Cosmic Force",
+		rating: 2,
+		num: 987,
 	},
 	costar: {
 		onStart(pokemon) {
@@ -2153,6 +2204,21 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
         rating: 2,
         num: 937,
     },
+	honeyboost: {
+		onModifyAtk(atk, pokemon, source) {
+			if (pokemon.hasItem("honey")) {
+				return this.chainModify([4915, 4096]);
+			}
+		},
+		onModifyDef(def, pokemon, source) {
+			if (pokemon.hasItem("honey")) {
+				return this.chainModify([4915, 4096]);
+			}
+		},
+		name: "Honey Boost",
+		rating: 4,
+		num: 989,
+	},
 	honeygather: {
 		name: "Honey Gather",
 		rating: 0,
@@ -4426,6 +4492,15 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2.5,
 		num: 955,
 	},
+	resilience: {
+		onDamagingHit(damage, target, source, effect) {
+			if(effect.category == "Special")
+			this.boost({spd: 1});
+		},
+		name: "Resilience",
+		rating: 3.5,
+		num: 987,
+	},
 	ripen: {
 		onTryHeal(damage, target, source, effect) {
 			if (!effect) return;
@@ -5300,6 +5375,16 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Stimulating",
 		rating: 4,
 		num: 965,
+	},
+	stonegaze: {
+		onDamagingHit(damage, target, source, move) {
+				if (this.randomChance(2, 10)) {
+					source.trySetStatus('brn', target);
+				}
+		},
+		name: "Stone Gaze",
+		rating: 2,
+		num: 988,
 	},
 	stormdrain: {
 		onTryHit(target, source, move) {

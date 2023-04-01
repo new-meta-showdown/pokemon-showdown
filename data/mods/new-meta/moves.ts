@@ -11035,6 +11035,31 @@ export const Moves: {[moveid: string]: MoveData} = {
 		zMove: {boost: {spd: 1}},
 		contestType: "Clever",
 	},
+	magmabath: {
+		num: 1500,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Magma Bath",
+		pp: 20,
+		priority: 0,
+		flags: {snatch: 1},
+		volatileStatus: 'magmabath',
+		condition: {
+			onStart(pokemon) {
+				this.add('-start', pokemon, 'Magma Bath');
+			},
+			onResidualOrder: 6,
+			onResidual(pokemon) {
+				this.heal(pokemon.baseMaxhp / 16);
+			},
+		},
+		secondary: null,
+		target: "self",
+		type: "Fire",
+		zMove: {boost: {def: 1}},
+		contestType: "Beautiful",
+	},
 	magmastorm: {
 		num: 463,
 		accuracy: 75,
