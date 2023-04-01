@@ -39,6 +39,17 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 0.1,
 		num: 0,
 	},
+	acceleration: {
+		onBasePowerPriority: 30,
+		onBasePower(basePower, attacker, defender, move) {
+			if (move.priority > 0) {
+				return this.chainModify(1.5);
+			}
+		},
+		name: "Acceleration",
+		rating: 4,
+		num: 980,
+	},
 	adaptability: {
 		onModifyMove(move) {
 			move.stab = 2;
@@ -719,6 +730,17 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Cloud Nine",
 		rating: 1.5,
 		num: 13,
+	},
+	clumsy: {
+		onModifyAtkPriority: 5,
+		onModifyAtk(atk, pokemon) {
+			if (pokemon.volatiles['confusion']) {
+				return this.chainModify(1.3);
+			}
+		},
+		name: "Clumsy",
+		rating: 3,
+		num: 981,
 	},
 	colorchange: {
 		onAfterMoveSecondary(target, source, move) {
@@ -3002,6 +3024,19 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3.5,
 		num: 228,
 	},
+	mistweaver: {
+		onSourceBasePowerPriority: 22,
+		onSourceBasePower(basePower, attacker, defender, move) {
+			if (this.field.isTerrain('mistyterrain')) return;
+				if (move.type === 'Fairy') {
+					this.debug('Weaver Mist boost');
+				return this.chainModify(1.5);
+			}
+		},
+		name: "Mist Weaver",
+		rating: 3.5,
+		num: 982,
+	},
 	moldbreaker: {
 		onStart(pokemon) {
 			this.add('-ability', pokemon, 'Mold Breaker');
@@ -3326,6 +3361,20 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Normalize",
 		rating: 0,
 		num: 96,
+	},
+	nullspace: {
+		name: "Null Space",
+		onAnyModifyBoost(boosts, pokemon) {
+			const unawareUser = this.effectState.target;
+			if (unawareUser === pokemon) return;
+			if (unawareUser === this.activePokemon && pokemon === this.activeTarget) {
+				boosts['def'] = 0;
+				boosts['spd'] = 0;
+			}
+		},
+		isBreakable: true,
+		rating: 4,
+		num: 978,
 	},
 	oblivious: {
 		onUpdate(pokemon) {
@@ -4469,6 +4518,14 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3.5,
 		num: 276,
 	},
+	rooted: {
+		name: "Rooted",
+		onStart(pokemon) {
+				pokemon.addVolatile('ingrain');
+		},
+		rating: 2,
+		num: 979,
+	},
 	roughskin: {
 		onDamagingHitOrder: 1,
 		onDamagingHit(damage, target, source, move) {
@@ -4862,6 +4919,20 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3,
 		num: 197,
 	},
+	shorttemper: {
+		onAfterMoveSecondary(target, source, move) {
+			if (!source || source === target || !target.hp || !move.totalDamage) return;
+			const lastAttackedBy = target.getLastAttackedBy();
+			if (!lastAttackedBy) return;
+			const damage = move.multihit ? move.totalDamage : lastAttackedBy.damage;
+			if (target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2) {
+				this.boost({atk: 1});
+			}
+		},
+		name: "Short Temper",
+		rating: 2,
+		num: 983,
+	},
 	simple: {
 		onChangeBoost(boost, target, source, effect) {
 			if (effect && effect.id === 'zpower') return;
@@ -5115,6 +5186,14 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Stance Change",
 		rating: 4,
 		num: 176,
+	},
+	starstruck: {
+		onModifyMove(move, source) {
+			if (source.hp <= source.maxhp / 2) move.accuracy = true;
+		},
+		name: "Starstruck",
+		rating: 3,
+		num: 981,
 	},
 	static: {
 		onDamagingHit(damage, target, source, move) {
