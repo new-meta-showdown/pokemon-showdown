@@ -2893,6 +2893,20 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3,
 		num: 290,
 	},
+	orbital: {
+        onStart(pokemon) {
+            this.field.addPseudoWeather('gravity', pokemon);
+        },
+        onSwitchOut(pokemon) {
+            this.field.removePseudoWeather('gravity');
+        },
+        onFaint(pokemon) {
+            this.field.removePseudoWeather('gravity');
+        },
+        name: "Orbital",
+        rating: 3,
+        num: 916,
+    },
 	orichalcumpulse: {
 		onStart(pokemon) {
 			if (this.field.setWeather('sunnyday')) {
