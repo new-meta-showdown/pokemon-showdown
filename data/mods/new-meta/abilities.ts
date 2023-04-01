@@ -471,6 +471,24 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2,
 		num: 66,
 	},
+	bloodsucker: {
+        onModifyMove(move) {
+            if (move.flags['bite']) {
+                move.flags['heal'] = 1;
+				if (move.drain) {
+					const dividend = move.drain[0] * 3 + move.drain[1];
+					const divisor = move.drain[1] * 3;
+					move.drain = [dividend,divisor];
+				}
+				else {
+					move.drain = [1,3];
+				}
+            }
+        },
+        name: "Blood Sucker",
+        rating: 3,
+        num: 909,
+    },
 	bulletproof: {
 		onTryHit(pokemon, target, move) {
 			if (move.flags['bullet']) {
