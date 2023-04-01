@@ -1290,6 +1290,17 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3,
 		num: 111,
 	},
+	fishmemory: {
+		onResidualOrder: 26,
+		onResidualSubOrder: 1,
+		onResidual(target) {
+			target.clearBoosts();
+			this.add('-clearboost', target);
+		},
+		name: "Fish Memory",
+		rating: 5,
+		num: 941,
+	},
 	flamebody: {
 		onDamagingHit(damage, target, source, move) {
 			if (this.checkMoveMakesContact(move, source, target)) {
@@ -1826,6 +1837,17 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2.5,
 		num: 139,
 	},
+	haunted: {
+		name: "Haunted",
+		onDamagingHitOrder: 1,
+		onDamagingHit(damage, target, source, move) {
+			if (!target.hp) {
+				this.actions.useMove("lazycurse", target);
+			}
+		},
+		rating: 2.5,
+		num: 939,
+	},
 	healer: {
 		name: "Healer",
 		onResidualOrder: 5,
@@ -1868,6 +1890,14 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 0,
 		num: 134,
 	},
+	hideandseek: {
+        onStart(pokemon) {
+            this.actions.useMove("substitute", pokemon);
+        },
+        name: "Hide and Seek",
+        rating: 2,
+        num: 937,
+    },
 	honeygather: {
 		name: "Honey Gather",
 		rating: 0,
@@ -2075,6 +2105,19 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Illusion",
 		rating: 4.5,
 		num: 149,
+	},
+	imitation: {
+		name: "Imitation",
+		onSourceAfterFaint(length, target, source, effect) {
+			if (effect && effect.effectType === 'Move') {
+				const targetSpe = target.storedStats.spe;
+				target.storedStats.spe = source.storedStats.spe;
+				source.storedStats.spe = targetSpe;
+				this.add('-activate', source, 'ability: Imitation', '[of] ' + target);
+			}
+		},
+		rating: 2.5,
+		num: 940,
 	},
 	immunity: {
 		onUpdate(pokemon) {
@@ -3045,6 +3088,24 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
         rating: 3,
         num: 916,
     },
+	orchestral: {
+		onBasePowerPriority: 7,
+		onBasePower(basePower, attacker, defender, move) {
+			if (move.flags['sound']) {
+				this.debug('Orchestral boost');
+				return this.chainModify([0x14CD, 0x1000]);
+			}
+		},
+		onSourceModifyDamage(damage, source, target, move) {
+			if (move.flags['sound']) {
+				this.debug('Orchestral weaken');
+				return this.chainModify(0.5);
+			}
+		},
+		name: "Orchestral",
+		rating: 3.5,
+		num: 938,
+	},
 	orichalcumpulse: {
 		onStart(pokemon) {
 			if (this.field.setWeather('sunnyday')) {
@@ -4049,6 +4110,22 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Sap Sipper",
 		rating: 3,
 		num: 157,
+	},
+	scavenger: {
+		name: "Scavenger",
+		onResidualOrder: 26,
+		onResidualSubOrder: 1,
+		onResidual(pokemon) {
+			if (this.randomChance(1, 2)) {
+				if (pokemon.hp && !pokemon.item && this.dex.items.get(pokemon.lastItem)) {
+					pokemon.setItem(pokemon.lastItem);
+					pokemon.lastItem = '';
+					this.add('-item', pokemon, pokemon.getItem(), '[from] ability: Scavenger');
+				}
+			}
+		},
+		rating: 2.5,
+		num: 936,
 	},
 	schooling: {
 		onStart(pokemon) {

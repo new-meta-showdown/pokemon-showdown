@@ -10241,6 +10241,40 @@ export const Moves: {[moveid: string]: MoveData} = {
 		type: "Fire",
 		contestType: "Tough",
 	},
+	lazycurse: {
+		num: 955,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Haunted Curse",
+		pp: 10,
+		priority: 0,
+		flags: {authentic: 1},
+		volatileStatus: 'curse',
+		onTryHit(target, source, move) {
+			if (move.volatileStatus && target.volatiles['curse']) {
+				return false;
+			}
+		},
+		onHit(target, source) {
+			this.directDamage(source.maxhp / 2, source, source);
+		},
+		condition: {
+			onStart(pokemon, source) {
+				this.add('-start', pokemon, 'Curse', '[of] ' + source);
+			},
+			onResidualOrder: 10,
+			onResidual(pokemon) {
+				this.damage(pokemon.baseMaxhp / 4);
+			},
+		},
+		secondary: null,
+		target: "randomNormal",
+		nonGhostTarget: "self",
+		type: "Ghost",
+		zMove: {effect: 'curse'},
+		contestType: "Tough",
+	},
 	lazyencore: {
         num: 893,
         accuracy: 100,
