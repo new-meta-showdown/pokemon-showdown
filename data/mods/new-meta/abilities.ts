@@ -654,6 +654,23 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3,
 		num: 14,
 	},
+	conflagrant: {
+        // upokecenter says this is implemented as an added secondary effect
+        onModifyMove(move) {
+            if (!move || !move.flags['contact'] || move.target === 'self') return;
+            if (!move.secondaries) {
+                move.secondaries = [];
+            }
+            move.secondaries.push({
+                chance: 30,
+                status: 'brn',
+				ability: this.dex.abilities.get('conflagrant'),
+            });
+        },
+        name: "Conflagrant",
+        rating: 2,
+        num: 906,
+    },
 	contrary: {
 		onChangeBoost(boost, target, source, effect) {
 			if (effect && effect.id === 'zpower') return;
