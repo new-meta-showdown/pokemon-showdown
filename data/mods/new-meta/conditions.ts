@@ -591,7 +591,11 @@ export const Conditions: {[k: string]: ConditionData} = {
 				this.debug('Sunny Day fire boost');
 				return this.chainModify(1.5);
 			}
-			if (move.type === 'Water') {
+			if (move.type === 'Water' && attacker.hasAbility('hydrothermal')) {
+				this.debug('Sunny Day hydrothermal water boost');
+				return this.chainModify(1.1);
+			}
+			if (move.type === 'Water' && !attacker.hasAbility('hydrothermal')) {
 				this.debug('Sunny Day water suppress');
 				return this.chainModify(0.5);
 			}

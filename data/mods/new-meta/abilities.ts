@@ -307,6 +307,30 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 1,
 		num: 188,
 	},
+	backstabber: {
+		onAllyHit(target, source, move) {
+			let hitByAlly = false;
+			if (!target.hp) return;
+			for (const allyActive of target.side.active) {
+				if (allyActive === source) hitByAlly = true;
+			}
+			if (hitByAlly && move.target != "allAdjacent") this.heal(source.baseMaxhp / 2, source);
+		},
+		onBasePowerPriority: 23,
+		onBasePower(basePower, attacker, defender, move) {
+			let hitByAlly = false;
+			if (!defender.hp) return;
+			for (const allyActive of defender.side.active) {
+				if (allyActive === attacker) hitByAlly = true;
+			}
+			console.log("move.target: "+move.target);
+			console.log("hitByAlly: "+hitByAlly)
+			if (hitByAlly && move.target != "allAdjacent") return this.chainModify(1.5);
+		},
+		name: "Backstabber",
+		rating: 1.5,
+		num: 966,
+	},
 	baddreams: {
 		onResidualOrder: 28,
 		onResidualSubOrder: 2,
@@ -552,6 +576,17 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3,
 		num: 171,
 	},
+	camper: {
+        onModifyMove(move, attacker) {
+            if (move.flags['charge'] && !attacker.volatiles['twoturnmove']) {
+				attacker.cureStatus();
+				this.heal(attacker.baseMaxhp / 7, attacker);
+            }
+        },
+        name: "Camper",
+        rating: 3,
+        num: 970,
+    },
 	catastrophic: {
 		//implemented in conditions.ts
 		name: "Catastrophic",
@@ -1353,6 +1388,23 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3.5,
 		num: 926,
 	},
+	envious: {
+		onStart(pokemon) {
+			for (const target of pokemon.side.foe.active) {
+				if (!target.boosts) return;
+				let isBoosted = false;
+				let i: BoostID;
+				for (i in target.boosts) {
+					if(target.boosts[i] > 0) isBoosted = true;
+				}
+				console.log("isBoosted: "+isBoosted);
+				if (isBoosted) this.boost({atk: 1}, pokemon);
+			}
+		},
+		name: "Envious",
+		rating: 4,
+		num: 964,
+	},
 	fairyaura: {
 		onStart(pokemon) {
 			if (this.suppressingAbility(pokemon)) return;
@@ -1942,6 +1994,16 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 4.5,
 		num: 289,
 	},
+	happyspiker: {
+		onModifyMove(move, source, target) {
+			if (move.id === 'spikes') {
+				source.side.foe.addSideCondition('spikes');
+			}
+		},
+		name: "Happy Spiker",
+		rating: 0,
+		num: 971,
+	},
 	harvest: {
 		name: "Harvest",
 		onResidualOrder: 28,
@@ -2096,6 +2158,12 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Hydration",
 		rating: 1.5,
 		num: 93,
+	},
+	hydrothermal: {
+		//implemented in conditions.ts
+		name: "Hydrothermal",
+		rating: 1.5,
+		num: 969,
 	},
 	hypercutter: {
 		onTryBoost(boost, target, source, effect) {
@@ -4541,6 +4609,18 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2.5,
 		num: 269,
 	},
+	seer: {
+		onModifyMovePriority: -5,
+		onModifyMove(move) {
+			if (!move.ignoreImmunity) move.ignoreImmunity = {};
+			if (move.ignoreImmunity !== true) {
+				move.ignoreImmunity['Psychic'] = true;
+			}
+		},
+		name: "Seer",
+		rating: 3,
+		num: 968,
+	},
 	serenegrace: {
 		onModifyMovePriority: -2,
 		onModifyMove(move) {
@@ -5037,6 +5117,18 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Sticky Hold",
 		rating: 1.5,
 		num: 60,
+	},
+	stimulating: {
+		onFoeTryBoost(boost, target, source, effect) {
+			if (effect && effect.id === 'zpower') return;
+			let i: BoostID;
+			for (i in boost) {
+				boost[i]! *= 2;
+			}
+		},
+		name: "Stimulating",
+		rating: 4,
+		num: 965,
 	},
 	stormdrain: {
 		onTryHit(target, source, move) {
