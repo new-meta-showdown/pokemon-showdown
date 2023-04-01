@@ -1534,6 +1534,23 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 4,
 		num: 206,
 	},
+	gardensgift: {
+        onBasePowerPriority: 23,
+        onBasePower(basePower, attacker, defender, move) {
+            if (move.type === 'Grass') {
+							this.debug('Gardens Gift boost');
+                return this.chainModify([5325, 4096]);
+            }
+        },
+        onModifyMove(move) {
+            if (move.type === 'Grass') {
+				move.accuracy = Number(move.accuracy) * 1.3;
+            }
+        },
+        name: "Garden's Gift",
+        rating: 4,
+        num: 915,
+    },
 	gluttony: {
 		name: "Gluttony",
 		rating: 1.5,
@@ -2144,7 +2161,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
         },
         name: "Kicker",
         rating: 3,
-        num: 91,
+        num: 914,
     },
 	klutz: {
 		// Item suppression implemented in Pokemon.ignoringItem() within sim/pokemon.js
