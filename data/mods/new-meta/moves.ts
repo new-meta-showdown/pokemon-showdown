@@ -7864,6 +7864,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.add('-activate', source, 'ability: Persistent', '[move] Gravity');
 					return 7;
 				}
+				if (source?.hasAbility('orbital')) {
+					return 0;
+				}
 				return 5;
 			},
 			onFieldStart(target, source) {

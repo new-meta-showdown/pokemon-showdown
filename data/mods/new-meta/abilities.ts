@@ -351,8 +351,6 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			for (const allyActive of defender.side.active) {
 				if (allyActive === attacker) hitByAlly = true;
 			}
-			console.log("move.target: "+move.target);
-			console.log("hitByAlly: "+hitByAlly)
 			if (hitByAlly && move.target != "allAdjacent") return this.chainModify(1.5);
 		},
 		name: "Backstabber",
@@ -1294,9 +1292,6 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			if (target === source || move.category === 'Status' || move.type === '???' || move.id === 'struggle') return;
 			if (move.id === 'skydrop' && !source.volatiles['skydrop']) return;
 			this.debug('Divine Guard immunity: ' + move.id);
-			console.log("move.type: "+move.type);
-			console.log("effectiveness: "+target.runEffectiveness(move));
-			console.log("smartTarget: "+move.smartTarget);
 			if (target.runEffectiveness(move) >= 0) {
 				if (move.smartTarget) {
 					move.smartTarget = false;
@@ -1522,7 +1517,6 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				for (i in target.boosts) {
 					if(target.boosts[i] > 0) isBoosted = true;
 				}
-				console.log("isBoosted: "+isBoosted);
 				if (isBoosted) this.boost({atk: 1}, pokemon);
 			}
 		},
@@ -2549,7 +2543,6 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			}
 		},
 		onSourceModifyDamage(damage, source, target, move) {
-			console.log("moveValue: "+target.getMoveHitData(move).typeMod);
 			if (target.getMoveHitData(move).typeMod > 0) {
 				this.debug('Inner Dragon weaknesses applied');
 				return this.chainModify(2);
