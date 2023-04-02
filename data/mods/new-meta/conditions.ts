@@ -253,6 +253,20 @@ export const Conditions: {[k: string]: ConditionData} = {
 			this.add('-activate', target, 'trapped');
 		},
 	},
+	gordiantrap: {
+		name: 'gordiantrap',
+		noCopy: true,
+		duration: 2,
+		onTrapPokemon(pokemon) {
+			pokemon.tryTrap();
+		},
+		onStart(target) {
+			this.add('-activate', target, 'gordiantrap');
+		},
+		onEnd(pokemon) {
+			this.add('-end', pokemon, this.effectState.sourceEffect, '[gordiantrap]');
+		},
+	},
 	trapper: {
 		name: 'trapper',
 		noCopy: true,
