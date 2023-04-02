@@ -68,7 +68,7 @@ export const Formats: FormatList = [
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3711099/">National Dex BH</a>`,
 		],
-		mod: 'new-meta',
+		mod: 'gen9newmeta',
 		ruleset: ['-Nonexistent', 'Standard NatDex', 'Dynamax Clause', '!Obtainable'],
 	},
 	{
