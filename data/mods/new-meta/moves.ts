@@ -925,6 +925,26 @@ export const Moves: {[moveid: string]: MoveData} = {
 		target: "normal",
 		type: "Fighting",
 	},
+	runawaybeam: {
+		num: 15000,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Runaway Beam",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, reflectable: 1, mirror: 1},
+		onHit(target, source) {
+			if (target.setAbility('runaway')) {
+				this.add('-ability', target, 'Run Away', '[from] move: Runaway Beam');
+			}
+		},
+		secondary: null,
+		target: "normal",
+		type: "Fairy",
+		zMove: {boost: {spe: 1}},
+		contestType: "Cute",
+	},
 	babydolleyes: {
 		num: 608,
 		accuracy: 100,
