@@ -23314,7 +23314,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		onModifyMove(move, source) {
 			if (!source.volatiles['abduction']) {
 				move.accuracy = true;
-				delete move.flags.contact; // TODO: explain that this was changed from setting it to 0
+				delete move.flags.contact;
 			}
 		},
 		onMoveFail(target, source) {
@@ -25386,7 +25386,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Play Rough",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, dance: 1}, // TODO: explain that removed a second contact flag with a capital 'C'
+		flags: {contact: 1, protect: 1, mirror: 1, dance: 1},
 		secondary: {
 			onHit(target, source) {
 				target.addVolatile('torment', source);
