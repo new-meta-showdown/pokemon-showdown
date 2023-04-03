@@ -22306,7 +22306,6 @@ export const Moves: {[moveid: string]: MoveData} = {
         priority: 0,
         flags: {contact: 1, protect: 1, mirror: 1},
         onTryHit(target, source, move) {
-			//source.addVolatile('dualstrike');
 			if (source.volatiles['dualstrikefirst']) {
 				if (source.getTypes().length === 1) {
 					move.type = source.getTypes()[0];
@@ -22315,12 +22314,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 				}
 				delete source.volatiles['dualstrikefirst'];
 				source.addVolatile('dualstrikesecond');
-				console.log("onTryHit with volatileStatus type: "+move.type);
 			}
 			else {
 				source.addVolatile('dualstrikefirst');
 				move.type = source.getTypes()[0];
-				console.log("onTryHit without volatileStatus type: "+move.type);
 			}
         },
         multihit: 2,
@@ -22666,7 +22663,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {protect: 1, mirror: 1, wind: 1},
 		weather: 'Neutral Weather',
 		onTry(source, target) {
-			console.log("effectiveWeather:" + source.effectiveWeather());
 			if (source.effectiveWeather() === '') {
 				this.add('-fail', source);
 				this.attrLastMove('[still]');
@@ -22692,6 +22688,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 			case 'toxiccloud':
 				move.type = 'Poison';
 				break;
+			case 'meteorshower':
+				move.type = 'Cosmic';
 			}
 		},
 		secondary: null,
@@ -22902,25 +22900,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		zMove: {boost: {def: 1}},
 		contestType: "Beautiful",
 	},
-	prismbeam: {
-        num: 895,
-        accuracy: 100,
-        basePower: 115,
-        category: "Special",
-        name: "Prism Beam",
-        pp: 10,
-        priority: 0,
-        flags: {protect: 1, mirror: 1},
-        self: {
-            boosts: {
-                spa: -1,
-            },
-        },
-        secondary: null,
-        target: "normal",
-        type: "Light",
-        contestType: "Beautiful",
-    },
 	callout: {
         num: 896,
         accuracy: true,
@@ -23025,105 +23004,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		contestType: "Cool",
 	},
 	*/
-	clearlight: {
-		num: 900,
-		accuracy: true,
-		basePower: 0,
-		category: "Status",
-		name: "Clear Light",
-		pp: 20,
-		priority: 0,
-		flags: {snatch: 1},
-		onHit(pokemon, target) {
-			pokemon.cureStatus();
-		},
-		boosts: {
-			accuracy: 1,
-		},
-		secondary: null,
-		target: "self",
-		type: "Light",
-		zMove: {effect: 'clearnegativeboost'},
-		contestType: "Tough",
-	},
-	lightspeed: {
-		num: 901,
-		accuracy: 100,
-		basePower: 80,
-		category: "Physical",
-		name: "Light Speed",
-		pp: 5,
-		priority: 2,
-		flags: {contact: 1, protect: 1, mirror: 1},
-		secondary: null,
-		target: "normal",
-		type: "Light",
-		contestType: "Cool",
-	},
-	// blindingblast: {
-	// 	num: 902,
-	// 	accuracy: 100,
-	// 	basePower: 110,
-	// 	category: "Special",
-	// 	name: "Blinding Blast",
-	// 	pp: 5,
-	// 	priority: 0,
-	// 	flags: {protect: 1, mirror: 1},
-	// 	secondary: null,
-	// 	target: "normal",
-	// 	type: "Light",
-	// 	contestType: "Beautiful",
-	// },
-	// shadowyblast: {
-	// 	num: 903,
-	// 	accuracy: 100,
-	// 	basePower: 110,
-	// 	category: "Special",
-	// 	name: "Shadowy Blast",
-	// 	pp: 5,
-	// 	priority: 0,
-	// 	flags: {protect: 1, mirror: 1},
-	// 	secondary: null,
-	// 	target: "normal",
-	// 	type: "Dark",
-	// 	contestType: "Beautiful",
-	// },
-	lightwave: {
-		num: 904,
-		accuracy: 100,
-		basePower: 25,
-		category: "Special",
-		name: "Light Wave",
-		pp: 30,
-		priority: 0,
-		flags: {protect: 1, mirror: 1},
-		multihit: [2, 5],
-		secondary: null,
-		target: "normal",
-		type: "Light",
-		zMove: {basePower: 140},
-		maxMove: {basePower: 130},
-		contestType: "Beautiful",
-	},
-	photondischarge: {
-		num: 905,
-		accuracy: 100,
-		basePower: 130,
-		category: "Special",
-		name: "Photon Discharge",
-		pp: 5,
-		priority: 0,
-		flags: {protect: 1, mirror: 1},
-		self: {
-			boosts: {
-				spa: -2,
-			},
-		},
-		secondary: null,
-		target: "normal",
-		type: "Light",
-		contestType: "Beautiful",
-	},
 	cometstorm: {
 		num: 906,
 		accuracy: 80,
@@ -23194,44 +23074,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		target: "self",
 		type: "Cosmic",
 	},
-	radiantpunch: {
-		num: 908,
-		accuracy: 100,
-		basePower: 75,
-		category: "Physical",
-		name: "Radiant Punch",
-		pp: 15,
-		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, punch: 1},
-		secondary: {
-			chance: 10,
-			boosts: {
-				evasion: -1,
-			},
-		},
-		target: "normal",
-		type: "Light",
-		contestType: "Beautiful",
-	},
-	solarorb: {
-		num: 909,
-		accuracy: 100,
-		basePower: 90,
-		category: "Special",
-		name: "Solar Orb",
-		pp: 15,
-		priority: 0,
-		flags: {bullet: 1, protect: 1, mirror: 1},
-		secondary: {
-			chance: 10,
-			boosts: {
-				spe: -1,
-			},
-		},
-		target: "allAdjacent",
-		type: "Light",
-		contestType: "Cool",
-	},
 	meteorshower: {
 		num: 910,
 		accuracy: 100,
@@ -23248,37 +23090,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		zMove: {basePower: 140},
 		maxMove: {basePower: 130},
 		contestType: "Beautiful",
-	},
-	flashbeam: {
-		num: 911,
-		accuracy: 100,
-		basePower: 60,
-		category: "Special",
-		name: "Flash Beam",
-		pp: 20,
-		priority: 0,
-		flags: {protect: 1, pulse: 1, mirror: 1, distance: 1},
-		secondary: {
-			chance: 20,
-			volatileStatus: 'confusion',
-		},
-		target: "any",
-		type: "Light",
-		contestType: "Beautiful",
-	},
-	glowingbeam: {
-		num: 912,
-		accuracy: 100,
-		basePower: 40,
-		category: "Special",
-		name: "Glowing Beam",
-		pp: 25,
-		priority: 0,
-		flags: {protect: 1, mirror: 1},
-		secondary: null,
-		target: "normal",
-		type: "Light",
-		contestType: "Cute",
 	},
 	moonritual: {
 		num: 913,
@@ -23532,23 +23343,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		type: "Dragon",
 		contestType: "Clever",
 	},
-	blindingflash: {
-		num: 921,
-		accuracy: 100,
-		basePower: 80,
-		category: "Special",
-		name: "Blinding Flash",
-		pp: 15,
-		priority: 0,
-		flags: {protect: 1, mirror: 1},
-		secondary: {
-			chance: 30,
-			volatileStatus: 'flinch',
-		},
-		target: "any",
-		type: "Light",
-		contestType: "Cool",
-	},
 	starpierce: {
 		num: 922,
 		accuracy: 100,
@@ -23561,53 +23355,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		secondary: null,
 		target: "normal",
 		type: "Cosmic",
-		contestType: "Tough",
-	},
-	solarflare: {
-		num: 923,
-		accuracy: 100,
-		basePower: 60,
-		category: "Special",
-		name: "Solar Flare",
-		pp: 10,
-		priority: 0,
-		flags: {protect: 1, mirror: 1, distance: 1},
-		onModifyMove(move, pokemon) {
-			switch (pokemon.effectiveWeather()) {
-			case 'sunnyday':
-			case 'desolateland':
-				move.basePower *= 2;
-				break;
-			}
-		},
-		target: "any",
-		type: "Light",
-		contestType: "Tough",
-	},
-	dazzlingshock: {
-		num: 924,
-		accuracy: 90,
-		basePower: 120,
-		category: "Physical",
-		name: "Dazzling Shock",
-		pp: 10,
-		priority: 0,
-		flags: {contact: 1, charge: 1, protect: 1, mirror: 1},
-		onTryMove(attacker, defender, move) {
-			if (attacker.removeVolatile(move.id)) {
-				return;
-			}
-			this.add('-prepare', attacker, move.name);
-			this.boost({atk: 1}, attacker, attacker, move);
-			if (!this.runEvent('ChargeMove', attacker, defender, move)) {
-				return;
-			}
-			attacker.addVolatile('twoturnmove', defender);
-			return null;
-		},
-		secondary: null,
-		target: "normal",
-		type: "Light",
 		contestType: "Tough",
 	},
 	vacuumray: {
@@ -23638,42 +23385,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		target: "normal",
 		type: "Cosmic",
 		contestType: "Beautiful",
-	},
-	sunhammer: {
-		num: 927,
-		accuracy: 90,
-		basePower: 150,
-		category: "Physical",
-		name: "Sun Hammer",
-		pp: 5,
-		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
-		recoil: [1, 2],
-		secondary: null,
-		target: "normal",
-		type: "Light",
-		contestType: "Tough",
-	},
-	brightslap: {
-		num: 928,
-		accuracy: 100,
-		basePower: 60,
-		category: "Physical",
-		name: "Bright Slap",
-		pp: 10,
-		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, slap: 1},
-		secondary: {
-			chance: 10,
-			self: {
-				boosts: {
-					accuracy: 1,
-				},
-			},
-		},
-		target: "normal",
-		type: "Light",
-		contestType: "Cool",
 	},
 	wormhole: {
 		num: 929,
@@ -23903,27 +23614,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		type: "Psychic",
 		zMove: {boost: {spa: 2}},
 		contestType: "Clever",
-	},
-	solarhymn: {
-		num: 939,
-		accuracy: 90,
-		basePower: 100,
-		category: "Special",
-		name: "Solar Hymn",
-		pp: 5,
-		priority: 0,
-		flags: {protect: 1, mirror: 1, sound: 1, authentic: 1},
-		secondary: {
-			chance: 10,
-			self: {
-				boosts: {
-					spa: 1,
-				},
-			},
-		},
-		target: "normal",
-		type: "Light",
-		contestType: "Cool",
 	},
 	heartbreak: {
 		num: 940,
@@ -24213,59 +23903,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		maxMove: {basePower: 130},
 		contestType: "Cool",
 	},
-	brightclaw: {
-		num: 951,
-		accuracy: 100,
-		basePower: 75,
-		category: "Physical",
-		name: "Bright Claw",
-		pp: 15,
-		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
-		critRatio: 2,
-		secondary: null,
-		target: "normal",
-		type: "Light",
-		contestType: "Cool",
-	},
-	dazingpressure: {
-		num: 952,
-		accuracy: 100,
-		basePower: 20,
-		basePowerCallback(pokemon, target, move) {
-			return move.basePower + 20 * pokemon.positiveBoosts();
-		},
-		category: "Physical",
-		name: "Dazing Pressure",
-		pp: 10,
-		priority: 0,
-		flags: {protect: 1, mirror: 1, expert: 1},
-		secondary: null,
-		target: "normal",
-		type: "Light",
-		zMove: {basePower: 160},
-		maxMove: {basePower: 130},
-		contestType: "Clever",
-	},
-	dazingraze: {
-		num: 953,
-		accuracy: 100,
-		basePower: 95,
-		category: "Physical",
-		name: "Dazing Raze",
-		pp: 20,
-		priority: 0,
-		flags: {protect: 1, mirror: 1},
-		secondary: {
-			chance: 10,
-			boosts: {
-				accuracy: -1,
-			},
-		},
-		target: "normal",
-		type: "Light",
-		contestType: "Beautiful",
-	},
 	freezingcomet: {
 		num: 954,
 		accuracy: 90,
@@ -24473,53 +24110,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		type: "Poison",
 		zMove: {boost: {spe: 1}},
 		contestType: "Beautiful",
-	},
-	veiloflight: {
-		num: 965,
-		accuracy: 100,
-		basePower: 0,
-		category: "Status",
-		name: "Veil of Light",
-		pp: 15,
-		priority: 0,
-		flags: {protect: 1, reflectable: 1, mirror: 1, authentic: 1},
-		volatileStatus: 'veiloflight',
-		condition: {
-			noCopy: true,
-			onStart(target) {
-				if (target.hasType('Grass')) return false;
-				if (target.volatiles['dynamax']) {
-					delete target.volatiles['veiloflight'];
-					return false;
-				}
-				this.add('-start', target, 'Veil of Light');
-				this.effectState.layers = 1;
-			},
-			onRestart(target) {
-				if (target.hasType('Grass')) return false;
-				if (this.effectState.layers >= 2) return false;
-				if (target.volatiles['dynamax']) {
-					delete target.volatiles['veiloflight'];
-					return false;
-				}
-				this.add('-start', target, 'Veil of Light');
-				this.effectState.layers++;
-			},
-			onEnd(target) {
-				this.add('-end', target, 'Veil of Light');
-			},
-			onBeforeSwitchOut(target) {
-				if (target.hasItem('heavydutyboots')) return;
-				if (target.hasAbility('solidfooting')) return;
-				const typeMod = this.clampIntRange(target.runEffectiveness(this.dex.getActiveMove('veiloflight')), -6, 6);
-				this.damage(target.maxhp * (Math.pow(2, typeMod) / 8) * this.effectState.layers);
-			},
-		},
-		secondary: null,
-		target: "normal",
-		type: "Light",
-		zMove: {boost: {def: 1}},
-		contestType: "Tough",
 	},
 	nosedive: {
 		num: 966,
@@ -24771,23 +24361,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		type: "Psychic",
 		contestType: "Beautiful",
 	},
-	beaconbarrage: {
-		num: 983,
-		accuracy: 100,
-		basePower: 100,
-		category: "Special",
-		name: "Beacon Barrage",
-		pp: 10,
-		priority: 0,
-		flags: {protect: 1, mirror: 1},
-		onHit(target) {
-			target.addVolatile('veiloflight')
-		},
-		secondary: null,
-		target: "normal",
-		type: "Light",
-		contestType: "Tough",
-	},
 	aquaticgift: {
 		num: 984,
 		accuracy: 100,
@@ -24864,82 +24437,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		type: "Fighting",
 		contestType: "Cool",
 	},
-	// prophecy: {
-	// 	num: 987,
-	// 	accuracy: true,
-	// 	basePower: 0,
-	// 	category: "Status",
-	// 	name: "Prophecy",
-	// 	pp: 10,
-	// 	priority: 0,
-	// 	flags:{snatch: 1},
-	// 	ignoreImmunity: true,
-	// 	slotCondition: 'prophecy',
-	// 	condition: {
-	// 		duration: 3,
-	// 		onHit(source, target) {
-	// 		if (!target.side.addSlotCondition(target, 'prophecy')) return false;
-	// 			Object.assign(target.side.slotConditions[target.position]['prophecy'], {
-	// 				move: 'prophecy',
-	// 				source: source,
-	// 				moveData: {
-	// 					id: 'prophecy',
-	// 					name: "prophecy",
-	// 					accuracy: true,
-	// 					basePower: 0,
-	// 					category: "Special",
-	// 					priority: 0,
-	// 					flags: {},
-	// 					secondary: {
-	// 						boosts: {
-	// 							accuracy: 2,
-	// 						},
-	// 					},
-	// 					effectType: 'Move',
-	// 					isFutureMove: true,
-	// 					type: 'Light',
-	// 				},
-	// 			});
-	// 		},
-	// 	},
-	// 	// onHit(target, source){
-	// 	// 	if (!target.side.addSlotCondition(target, 'futuremove')) return false;
-	// 	// 	// const stats: BoostID[] = [];
-	// 	// 	// const randomStat = 'accuracy';
-	// 	// 	// const boost: SparseBoostsTable = {};
-	// 	// 	// boost[randomStat] = 2;
-	// 	// 	// this.boost(boost);
-	// 	// 	target.side.addSlotCondition(target, 'futuremove')
-	// 	// 	// target.side.removeSlotCondition(target, 'futuremove')
-	// 	// },
-	// 	// onTry(source, target) {
-	// 	// 	if (!target.side.addSlotCondition(target, 'prophecy')) return false;
-	// 	// 	Object.assign(target.side.slotConditions[target.position]['prophecy'], {
-	// 	// 		duration: 3,
-	// 	// 		move: 'prophecy',
-	// 	// 		source: source,
-	// 	// 		moveData: {
-	// 	// 			id: 'prophecy',
-	// 	// 			name: "prophecy",
-	// 	// 			accuracy: true,
-	// 	// 			basePower: 0,
-	// 	// 			category: "Status",
-	// 	// 			priority: 0,
-	// 	// 			flags: {future: 3},
-
-	// 	// 			ignoreImmunity: true,
-	// 	// 			effectType: 'Move',
-	// 	// 			isFutureMove: true,
-	// 	// 			type: 'Light',
-	// 	// 		},
-	// 	// 	});
-	// 	// },
-
-	// 	secondary: null,
-	// 	target: "self",
-	// 	type: "Light",
-	// 	contestType: "Clever",
-	// },
 	jetstream: {
 		num: 988,
 		accuracy: 100,
@@ -24952,62 +24449,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		secondary: null,
 		target: "normal",
 		type: "Flying",
-		contestType: "Cool",
-	},
-	enlightenment: {
-		num: 989,
-		accuracy: true,
-		basePower: 0,
-		category: "Special",
-		name: "Enlightenment",
-		pp: 10,
-		priority: 1,
-		flags: {snatch: 1},
-		volatileStatus: 'Safeguard',
-		condition: {
-			duration: 5,
-			durationCallback(target, source, effect) {
-				if (source?.hasAbility('persistent')) {
-					this.add('-activate', source, 'ability: Persistent', effect);
-					return 7;
-				}
-				return 5;
-			},
-			onSetStatus(status, target, source, effect) {
-				if (!effect || !source) return;
-				if (effect.id === 'yawn') return;
-				if (effect.effectType === 'Move' && effect.infiltrates && !target.isAlly(source)) return;
-				if (target !== source) {
-					this.debug('interrupting setStatus');
-					if (effect.id === 'synchronize' || (effect.effectType === 'Move' && !effect.secondaries)) {
-						this.add('-activate', target, 'move: Safeguard');
-					}
-					return null;
-				}
-			},
-			onTryAddVolatile(status, target, source, effect) {
-
-				if (!effect || !source) return;
-				if (effect.effectType === 'Move' && effect.infiltrates && !target.isAlly(source)) return;
-				if ((status.id === 'confusion' || status.id === 'yawn') && target !== source) {
-					if (effect.effectType === 'Move' && !effect.secondaries) this.add('-activate', target, 'move: Safeguard');
-					return null;
-				}
-			},
-			onSideStart(side) {
-				this.add('-sidestart', side, 'Safeguard');
-			},
-			onSideResidualOrder: 26,
-			onSideResidualSubOrder: 3,
-			onSideEnd(side) {
-				this.add('-sideend', side, 'Safeguard');
-			},
-		},
-		secondary: {
-			volatileStatus: 'focusenergy',
-		},
-		target: "allySide",
-		type: "Light",
 		contestType: "Cool",
 	},
 	treasurehoard: {
@@ -25101,34 +24542,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		type: "Normal",
 		contestType: "Cool",
 	},
-	candescence: {
-		num: 981,
-		accuracy: true,
-		basePower: 0,
-		category: "Status",
-		name: "Candescence",
-		pp: 10,
-		priority: 0,
-		flags: {snatch: 1},
-		volatileStatus: 'candescence',
-		condition: {
-			duration: 4,
-			onStart(pokemon) {
-				this.add('-start', pokemon, 'Candescence');
-			},
-			onResidualOrder: 6,
-			onResidual(pokemon) {
-				this.boost({atk: 1, spa: 1}, pokemon);
-			},
-			onEnd(pokemon) {
-				this.add('-end', pokemon, 'Candescence', '[silent]');
-			},
-		},
-		secondary: null,
-		target: "self",
-		type: "Light",
-		contestType: "Beautiful",
-	},
 	fail: {
 		num: 982,
 		accuracy: true,
@@ -25189,26 +24602,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		type: "Fire",
 		contestType: "Tough",
 	},
-	rainbowbash: {
-		num: 995,
-		accuracy: 100,
-		basePower: 120,
-		category: "Physical",
-		name: "Rainbow Bash",
-		pp: 5,
-		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
-		self: {
-			boosts: {
-				def: -1,
-				spd: -1,
-			},
-		},
-		secondary: null,
-		target: "normal",
-		type: "Light",
-		contestType: "Tough",
-	},
 	twintrunkwallop: {
 		num: 996,
 		accuracy: 100,
@@ -25228,21 +24621,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		target: "normal",
 		type: "Grass",
 		contestType: "Smart",
-	},
-	occultaura: {
-		num: 997,
-		accuracy: 100,
-		basePower: 60,
-		category: "Special",
-		name: "Occult Aura",
-		pp: 10,
-		priority: 0,
-		flags: {protect: 1, mirror: 1, heal: 1},
-		drain: [1, 2],
-		secondary: null,
-		target: "normal",
-		type: "Light",
-		contestType: "Clever",
 	},
 	astralprojections: {
 		num: 987,
