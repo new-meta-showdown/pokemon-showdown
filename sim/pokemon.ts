@@ -1682,6 +1682,7 @@ export class Pokemon {
 	useItem(source?: Pokemon, sourceEffect?: Effect) {
 		if ((!this.hp && !this.getItem().isGem) || !this.isActive) return false;
 		if (!this.item || this.itemState.knockedOff) return false;
+		this.battle.lastItemUsed = this.getItem();
 
 		if (!sourceEffect && this.battle.effect) sourceEffect = this.battle.effect;
 		if (!source && this.battle.event && this.battle.event.target) source = this.battle.event.target;

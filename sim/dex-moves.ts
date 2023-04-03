@@ -63,6 +63,12 @@ interface MoveFlags {
 	snatch?: 1; // Can be stolen from the original user and instead used by another Pokemon using Snatch.
 	sound?: 1; // Has no effect on Pokemon with the Ability Soundproof.
 	wind?: 1; // Activates the Wind Power and Wind Rider Abilities.
+
+	// New Meta unexplained flags
+	expert?: 1;
+	authentic?: 1;
+	mystery?: 1; // lol
+	slap?: 1;
 }
 
 export interface HitEffect {
@@ -277,6 +283,7 @@ export interface MoveData extends EffectData, MoveEventMethods, HitEffect {
 	noSketch?: boolean;
 	stallingMove?: boolean;
 	baseMove?: string;
+	isFutureMove?: boolean; // new meta weirdness
 }
 
 export type ModdedMoveData = MoveData | Partial<Omit<MoveData, 'name'>> & {

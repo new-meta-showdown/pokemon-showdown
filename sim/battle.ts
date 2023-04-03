@@ -173,6 +173,7 @@ export class Battle {
 	lastDamage: number;
 	abilityOrder: number;
 	quickClawRoll: boolean;
+	lastItemUsed: Item | null; // TODO: explain this in the comments
 
 	teamGenerator: ReturnType<typeof Teams.getGenerator> | null;
 
@@ -261,6 +262,7 @@ export class Battle {
 		this.lastDamage = 0;
 		this.abilityOrder = 0;
 		this.quickClawRoll = false;
+		this.lastItemUsed = null;
 
 		this.teamGenerator = null;
 
