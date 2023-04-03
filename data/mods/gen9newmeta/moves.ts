@@ -23705,7 +23705,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		onModifyType(move, pokemon) {
 			if (pokemon.getTypes()[1]) {
 				move.type = pokemon.getTypes()[1];
-				console.log("move.type: "+move.type);
 			} else {
 				return false;
 			}
