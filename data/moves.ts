@@ -180,7 +180,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Aerial Ace",
 		pp: 20,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, distance: 1, slicing: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, distance: 1, slicing: 1, blade: 1},
 		secondary: null,
 		target: "any",
 		type: "Flying",
@@ -253,7 +253,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Air Cutter",
 		pp: 25,
 		priority: 0,
-		flags: {protect: 1, mirror: 1, slicing: 1, wind: 1},
+		flags: {protect: 1, mirror: 1, slicing: 1, blade: 1, wind: 1},
 		critRatio: 2,
 		secondary: null,
 		target: "allAdjacentFoes",
@@ -268,7 +268,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Air Slash",
 		pp: 15,
 		priority: 0,
-		flags: {protect: 1, mirror: 1, distance: 1, slicing: 1},
+		flags: {protect: 1, mirror: 1, distance: 1, slicing: 1, blade: 1},
 		secondary: {
 			chance: 30,
 			volatileStatus: 'flinch',
@@ -412,7 +412,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Aqua Cutter",
 		pp: 20,
 		priority: 0,
-		flags: {protect: 1, mirror: 1, slicing: 1},
+		flags: {protect: 1, mirror: 1, slicing: 1, blade: 1},
 		critRatio: 2,
 		secondary: null,
 		target: "normal",
@@ -913,7 +913,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Axe Kick",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, kick: 1},
 		hasCrashDamage: true,
 		onMoveFail(target, source, move) {
 			this.damage(source.baseMaxhp / 2, source, source, this.dex.conditions.get('High Jump Kick'));
@@ -924,6 +924,26 @@ export const Moves: {[moveid: string]: MoveData} = {
 		},
 		target: "normal",
 		type: "Fighting",
+	},
+	runawaybeam: {
+		num: 15000,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Runaway Beam",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, reflectable: 1, mirror: 1},
+		onHit(target, source) {
+			if (target.setAbility('runaway')) {
+				this.add('-ability', target, 'Run Away', '[from] move: Runaway Beam');
+			}
+		},
+		secondary: null,
+		target: "normal",
+		type: "Fairy",
+		zMove: {boost: {spe: 1}},
+		contestType: "Cute",
 	},
 	babydolleyes: {
 		num: 608,
@@ -1169,7 +1189,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Behemoth Bash",
 		pp: 5,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, failcopycat: 1, failmimic: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, failcopycat: 1, failmimic: 1, blade: 1},
 		secondary: null,
 		target: "normal",
 		type: "Steel",
@@ -1182,7 +1202,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Behemoth Blade",
 		pp: 5,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1, failcopycat: 1, failmimic: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1, blade: 1, failcopycat: 1, failmimic: 1},
 		secondary: null,
 		target: "normal",
 		type: "Steel",
@@ -1368,7 +1388,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Bitter Blade",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1, blade: 1},
 		drain: [1, 2],
 		secondary: null,
 		target: "normal",
@@ -1433,7 +1453,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Blaze Kick",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, kick: 1},
 		critRatio: 2,
 		secondary: {
 			chance: 10,
@@ -2179,7 +2199,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Ceaseless Edge",
 		pp: 15,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1, blade: 1},
 		self: {
 			onHit(source) {
 				for (const side of source.side.foeSidesWithConditions()) {
@@ -3181,7 +3201,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Cross Poison",
 		pp: 20,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1, blade: 1},
 		secondary: {
 			chance: 10,
 			status: 'psn',
@@ -3306,7 +3326,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Cut",
 		pp: 30,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1, blade: 1},
 		secondary: null,
 		target: "normal",
 		type: "Normal",
@@ -3953,7 +3973,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Double Kick",
 		pp: 30,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, kick: 1},
 		multihit: 2,
 		secondary: null,
 		target: "normal",
@@ -6339,7 +6359,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Fury Cutter",
 		pp: 20,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1, blade: 1},
 		condition: {
 			duration: 2,
 			onStart() {
@@ -7310,7 +7330,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 				this.add('-sidestart', side, 'move: G-Max Steelsurge');
 			},
 			onEntryHazard(pokemon) {
-				if (pokemon.hasItem('heavydutyboots')) return;
+				if (pokemon.hasItem('heavydutyboots') || pokemon.ability === 'solidfooting') return;
 				// Ice Face and Disguise correctly get typed damage from Stealth Rock
 				// because Stealth Rock bypasses Substitute.
 				// They don't get typed damage from Steelsurge because Steelsurge doesn't,
@@ -7863,6 +7883,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 				if (source?.hasAbility('persistent')) {
 					this.add('-activate', source, 'ability: Persistent', '[move] Gravity');
 					return 7;
+				}
+				if (source?.hasAbility('orbital')) {
+					return 0;
 				}
 				return 5;
 			},
@@ -9001,7 +9024,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "High Jump Kick",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, gravity: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, gravity: 1, kick: 1},
 		hasCrashDamage: true,
 		onMoveFail(target, source, move) {
 			this.damage(source.baseMaxhp / 2, source, source, this.dex.conditions.get('High Jump Kick'));
@@ -9947,7 +9970,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Jump Kick",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, gravity: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, gravity: 1, kick: 1},
 		hasCrashDamage: true,
 		onMoveFail(target, source, move) {
 			this.damage(source.baseMaxhp / 2, source, source, this.dex.conditions.get('Jump Kick'));
@@ -10105,7 +10128,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Kowtow Cleave",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1, blade: 1},
 		secondary: null,
 		target: "normal",
 		type: "Dark",
@@ -10241,6 +10264,107 @@ export const Moves: {[moveid: string]: MoveData} = {
 		type: "Fire",
 		contestType: "Tough",
 	},
+	lazycurse: {
+		num: 955,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Haunted Curse",
+		pp: 10,
+		priority: 0,
+		flags: {authentic: 1},
+		volatileStatus: 'curse',
+		onTryHit(target, source, move) {
+			if (move.volatileStatus && target.volatiles['curse']) {
+				return false;
+			}
+		},
+		onHit(target, source) {
+			this.directDamage(source.maxhp / 2, source, source);
+		},
+		condition: {
+			onStart(pokemon, source) {
+				this.add('-start', pokemon, 'Curse', '[of] ' + source);
+			},
+			onResidualOrder: 10,
+			onResidual(pokemon) {
+				this.damage(pokemon.baseMaxhp / 4);
+			},
+		},
+		secondary: null,
+		target: "randomNormal",
+		nonGhostTarget: "self",
+		type: "Ghost",
+		zMove: {effect: 'curse'},
+		contestType: "Tough",
+	},
+	lazyencore: {
+        num: 893,
+        accuracy: 100,
+        basePower: 0,
+        category: "Status",
+        name: "Encore",
+        pp: 5,
+        priority: 0,
+        flags: {protect: 1, reflectable: 1, mirror: 1, authentic: 1},
+        volatileStatus: 'lazyencore',
+        condition: {
+            duration: 1,
+            noCopy: true, // doesn't get copied by Z-Baton Pass
+            onStart(target, pokemon) {
+                const noEncore = [
+                    'assist', 'copycat', 'encore', 'mefirst', 'metronome', 'mimic', 'mirrormove', 'naturepower', 'sketch', 'sleeptalk', 'struggle', 'transform',
+                ];
+                let move: Move | ActiveMove | null = target.lastMove;
+                if (!move || target.volatiles['dynamax']) return false;
+
+                if (move.isMax && move.baseMove) move = this.dex.moves.get(move.baseMove);
+                const moveIndex = target.moves.indexOf(move.id);
+                if (move.isZ || noEncore.includes(move.id) || !target.moveSlots[moveIndex] || target.moveSlots[moveIndex].pp <= 0) {
+                    // it failed
+                    return false;
+                }
+                this.effectState.move = move.id;
+                this.add('-start', target, 'Encore');
+                if (!this.queue.willMove(target)) {
+					console.log("ajoute un tour");
+                    this.effectState.duration++;
+                }
+				if (pokemon.side.faintedThisTurn) {
+					console.log("retire un tour");
+					this.effectState.duration--;
+				}
+            },
+            onOverrideAction(pokemon, target, move) {
+                if (move.id !== this.effectState.move) return this.effectState.move;
+            },
+			onResidualOrder: 13,
+            onResidual(target) {
+                if (target.moves.includes(this.effectState.move) &&
+                    target.moveSlots[target.moves.indexOf(this.effectState.move)].pp <= 0) {
+                    // early termination if you run out of PP
+                    target.removeVolatile('lazyencore');
+                }
+            },
+            onEnd(target) {
+                this.add('-end', target, 'Encore');
+            },
+            onDisableMove(pokemon) {
+                if (!this.effectState.move || !pokemon.hasMove(this.effectState.move)) {
+                    return;
+                }
+                for (const moveSlot of pokemon.moveSlots) {
+                    if (moveSlot.id !== this.effectState.move) {
+                        pokemon.disableMove(moveSlot.id);
+                    }
+                }
+            },
+        },
+        secondary: null,
+        target: "normal",
+        type: "Normal",
+        contestType: "Cute",
+    },
 	leafage: {
 		num: 670,
 		accuracy: 100,
@@ -10263,7 +10387,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Leaf Blade",
 		pp: 15,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1, blade: 1},
 		critRatio: 2,
 		secondary: null,
 		target: "normal",
@@ -10599,7 +10723,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Low Kick",
 		pp: 20,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, kick: 1},
 		onTryHit(target, pokemon, move) {
 			if (target.volatiles['dynamax']) {
 				this.add('-fail', pokemon, 'Dynamax');
@@ -10933,6 +11057,31 @@ export const Moves: {[moveid: string]: MoveData} = {
 		type: "Psychic",
 		zMove: {boost: {spd: 1}},
 		contestType: "Clever",
+	},
+	magmabath: {
+		num: 1500,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Magma Bath",
+		pp: 20,
+		priority: 0,
+		flags: {snatch: 1},
+		volatileStatus: 'magmabath',
+		condition: {
+			onStart(pokemon) {
+				this.add('-start', pokemon, 'Magma Bath');
+			},
+			onResidualOrder: 6,
+			onResidual(pokemon) {
+				this.heal(pokemon.baseMaxhp / 16);
+			},
+		},
+		secondary: null,
+		target: "self",
+		type: "Fire",
+		zMove: {boost: {def: 1}},
+		contestType: "Beautiful",
 	},
 	magmastorm: {
 		num: 463,
@@ -11720,7 +11869,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Mega Kick",
 		pp: 5,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, kick: 1},
 		secondary: null,
 		target: "normal",
 		type: "Normal",
@@ -12898,7 +13047,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Night Slash",
 		pp: 15,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1, blade: 1},
 		critRatio: 2,
 		secondary: null,
 		target: "normal",
@@ -13816,7 +13965,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Population Bomb",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1, blade: 1},
 		multihit: 10,
 		multiaccuracy: true,
 		secondary: null,
@@ -14119,7 +14268,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Precipice Blades",
 		pp: 10,
 		priority: 0,
-		flags: {protect: 1, mirror: 1, nonsky: 1},
+		flags: {protect: 1, mirror: 1, nonsky: 1, blade: 1},	
 		target: "allAdjacentFoes",
 		type: "Ground",
 		contestType: "Cool",
@@ -14244,7 +14393,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Psyblade",
 		pp: 15,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1, blade: 1},
 		secondary: null,
 		onBasePower(basePower, source) {
 			if (this.field.isTerrain('electricterrain')) {
@@ -14413,7 +14562,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Psycho Cut",
 		pp: 20,
 		priority: 0,
-		flags: {protect: 1, mirror: 1, slicing: 1},
+		flags: {protect: 1, mirror: 1, slicing: 1, blade: 1},
 		critRatio: 2,
 		secondary: null,
 		target: "normal",
@@ -14977,7 +15126,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Razor Leaf",
 		pp: 25,
 		priority: 0,
-		flags: {protect: 1, mirror: 1, slicing: 1},
+		flags: {protect: 1, mirror: 1, slicing: 1, blade: 1},
 		critRatio: 2,
 		secondary: null,
 		target: "allAdjacentFoes",
@@ -14992,7 +15141,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Razor Shell",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1, blade: 1},
 		secondary: {
 			chance: 50,
 			boosts: {
@@ -15610,7 +15759,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Rolling Kick",
 		pp: 15,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, kick: 1},
 		secondary: {
 			chance: 30,
 			volatileStatus: 'flinch',
@@ -15831,7 +15980,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Sacred Sword",
 		pp: 15,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1, blade: 1},
 		ignoreEvasion: true,
 		ignoreDefensive: true,
 		secondary: null,
@@ -16226,7 +16375,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Secret Sword",
 		pp: 10,
 		priority: 0,
-		flags: {protect: 1, mirror: 1},
+		flags: {protect: 1, mirror: 1, blade: 1},
 		secondary: null,
 		target: "normal",
 		type: "Fighting",
@@ -17207,7 +17356,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Slash",
 		pp: 20,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1, blade: 1},
 		critRatio: 2,
 		secondary: null,
 		target: "normal",
@@ -17373,7 +17522,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Smart Strike",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, blade: 1},
 		secondary: null,
 		target: "normal",
 		type: "Steel",
@@ -17643,7 +17792,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Solar Blade",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, charge: 1, protect: 1, mirror: 1, slicing: 1, nosleeptalk: 1, failinstruct: 1},
+		flags: {contact: 1, charge: 1, protect: 1, mirror: 1, slicing: 1, blade: 1, nosleeptalk: 1, failinstruct: 1},
 		onTryMove(attacker, defender, move) {
 			if (attacker.removeVolatile(move.id)) {
 				return;
@@ -17901,7 +18050,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 				this.effectState.layers++;
 			},
 			onEntryHazard(pokemon) {
-				if (!pokemon.isGrounded() || pokemon.hasItem('heavydutyboots')) return;
+				if (!pokemon.isGrounded() || pokemon.hasItem('heavydutyboots') || pokemon.ability === 'solidfooting') return;
 				const damageAmounts = [0, 3, 4, 6]; // 1/8, 1/6, 1/4
 				this.damage(damageAmounts[this.effectState.layers] * pokemon.maxhp / 24);
 			},
@@ -18222,7 +18371,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 				this.add('-sidestart', side, 'move: Stealth Rock');
 			},
 			onEntryHazard(pokemon) {
-				if (pokemon.hasItem('heavydutyboots')) return;
+				if (pokemon.hasItem('heavydutyboots') || pokemon.ability === 'solidfooting') return;
 				const typeMod = this.clampIntRange(pokemon.runEffectiveness(this.dex.getActiveMove('stealthrock')), -6, 6);
 				this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 8);
 			},
@@ -18350,7 +18499,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 				this.add('-sidestart', side, 'move: Sticky Web');
 			},
 			onEntryHazard(pokemon) {
-				if (!pokemon.isGrounded() || pokemon.hasItem('heavydutyboots')) return;
+				if (!pokemon.isGrounded() || pokemon.hasItem('heavydutyboots') || pokemon.ability === 'solidfooting') return;
 				this.add('-activate', pokemon, 'move: Sticky Web');
 				this.boost({spe: -1}, pokemon, this.effectState.source, this.dex.getActiveMove('stickyweb'));
 			},
@@ -18481,7 +18630,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Stone Axe",
 		pp: 15,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1, blade: 1},
 		self: {
 			onHit(source) {
 				for (const side of source.side.foeSidesWithConditions()) {
@@ -19863,7 +20012,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Thunderous Kick",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, kick: 1},
 		secondary: {
 			chance: 100,
 			boosts: {
@@ -20098,7 +20247,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 				if (pokemon.hasType('Poison')) {
 					this.add('-sideend', pokemon.side, 'move: Toxic Spikes', '[of] ' + pokemon);
 					pokemon.side.removeSideCondition('toxicspikes');
-				} else if (pokemon.hasType('Steel') || pokemon.hasItem('heavydutyboots')) {
+				} else if (pokemon.hasType('Steel') || pokemon.hasItem('heavydutyboots') || pokemon.ability === 'solidfooting') {
 					return;
 				} else if (this.effectState.layers >= 2) {
 					pokemon.trySetStatus('tox', pokemon.side.foe.active[0]);
@@ -20390,7 +20539,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Triple Kick",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, kick: 1},
 		multihit: 3,
 		multiaccuracy: true,
 		secondary: null,
@@ -20408,7 +20557,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Trop Kick",
 		pp: 15,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, kick: 1},
 		secondary: {
 			chance: 100,
 			boosts: {
@@ -21061,6 +21210,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 			case 'snow':
 				move.type = 'Ice';
 				break;
+			case 'meteorshower':
+				move.type = 'Cosmic';
+				break;
 			}
 		},
 		onModifyMove(move, pokemon) {
@@ -21078,6 +21230,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 				break;
 			case 'hail':
 			case 'snow':
+				move.basePower *= 2;
+				break;
+			case 'meteorshower':
 				move.basePower *= 2;
 				break;
 			}
@@ -21483,7 +21638,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "X-Scissor",
 		pp: 15,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1, blade: 1},
 		secondary: null,
 		target: "normal",
 		type: "Bug",
