@@ -28,3 +28,7 @@ export {TeamValidator} from './team-validator';
 // misc libraries
 
 export * from '../lib';
+
+// fusions
+
+export {fusePokemon} from './fusion';

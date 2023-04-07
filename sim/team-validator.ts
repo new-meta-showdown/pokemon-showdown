@@ -12,6 +12,7 @@ import {Utils} from '../lib';
 import {Tags} from '../data/tags';
 import {Teams} from './teams';
 import {PRNG} from './prng';
+import {fusePokemon} from './fusion';
 
 /**
  * Describes a possible way to get a pokemon. Is not exhaustive!
@@ -433,7 +434,7 @@ export class TeamValidator {
 			if (set.name && set.name.endsWith('-Gmax')) set.name = species.baseSpecies;
 			set.gigantamax = true;
 		}
-		if (set.name && set.name.length > 18) {
+		if (set.name && set.name.length > 18 && toID(set.species) !== "fusionmon") {
 			if (set.name === set.species) {
 				set.name = species.baseSpecies;
 			} else {
@@ -677,7 +678,57 @@ export class TeamValidator {
 			problems.push(...this.validateMoves(outOfBattleSpecies, set.moves, setSources, set, name, moveLegalityWhitelist));
 		}
 
-		const learnsetSpecies = dex.species.getLearnsetData(outOfBattleSpecies.id);
+		var learnsetSpecies;
+		if (outOfBattleSpecies.id !== "fusionmon") {
+			learnsetSpecies = dex.species.getLearnsetData(outOfBattleSpecies.id);
+		} else if (set.name && set.name !== "Fusionmon") {
+			// combine the learnsets of the fusionmon's components
+			// we can get the components by splitting the name by "/" then converting them to IDs
+			var components = set.name.split("/");
+			var headData = dex.species.getLearnsetData(toID(components[0]));
+			var bodyData = dex.species.getLearnsetData(toID(components[1]));
+			learnsetSpecies = {
+				learnset: {},
+				eventData: [],
+				eventOnly: false,
+				encounters: [],
+				effectType: "Learnset",
+			};
+			for (var moveid in headData.learnset) {
+				// @ts-ignore
+				learnsetSpecies.learnset[moveid] = headData.learnset[moveid];
+			}
+			for (var moveid in bodyData.learnset) {
+				if (learnsetSpecies.learnset[moveid]) {
+					// @ts-ignore
+					learnsetSpecies.learnset[moveid] = learnsetSpecies.learnset[moveid].concat(bodyData.learnset[moveid]);
+				} else {
+					// @ts-ignore
+					learnsetSpecies.learnset[moveid] = bodyData.learnset[moveid];
+				}
+			}
+			// @ts-ignore
+			for (var i = 0; i < headData.eventData.length; i++) {
+				// @ts-ignore
+				learnsetSpecies.eventData.push(headData.eventData[i]);
+			}
+			// @ts-ignore
+			for (var i = 0; i < bodyData.eventData.length; i++) {
+				// @ts-ignore
+				learnsetSpecies.eventData.push(bodyData.eventData[i]);
+			}
+			learnsetSpecies.eventOnly = headData.eventOnly || bodyData.eventOnly;
+			// @ts-ignore
+			for (var i = 0; i < headData.encounters.length; i++) {
+				// @ts-ignore
+				learnsetSpecies.encounters.push(headData.encounters[i]);
+			}
+			// @ts-ignore
+			for (var i = 0; i < bodyData.encounters.length; i++) {
+				// @ts-ignore
+				learnsetSpecies.encounters.push(bodyData.encounters[i]);
+			}
+		}
 		let eventOnlyData;
 
 		if (!setSources.sourcesBefore && setSources.sources.length) {
@@ -744,6 +795,7 @@ export class TeamValidator {
 		let isFromRBYEncounter = false;
 		if (this.gen === 1 && ruleTable.has('obtainablemisc') && !this.ruleTable.has('allowtradeback')) {
 			let lowestEncounterLevel;
+			// @ts-ignore
 			for (const encounter of learnsetSpecies.encounters || []) {
 				if (encounter.generation !== 1) continue;
 				if (!encounter.level) continue;
@@ -1077,6 +1129,15 @@ export class TeamValidator {
 	validateSource(
 		set: PokemonSet, source: PokemonSource, setSources: PokemonSources, species: Species, because?: string
 	) {
+		if (toID(set.species) === 'fusionmon' && set.name.includes("/")) {
+			var results = [];
+			for (const fusion of set.name.split("/")) {
+				let newSet = set;
+				newSet.species = fusion;
+				results.push(this.validateSource(newSet, source, setSources, species, because ? because : ""));
+			}
+			return results;
+		}
 		let eventData: EventInfo | undefined;
 		let eventSpecies = species;
 		if (source.charAt(1) === 'S') {

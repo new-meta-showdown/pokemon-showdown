@@ -3,6 +3,10 @@ import {toID, BasicEffect} from './dex-data';
 interface SpeciesAbility {
 	0: string;
 	1?: string;
+	2?: string;
+	3?: string;
+	4?: string;
+	5?: string;
 	H?: string;
 	S?: string;
 }

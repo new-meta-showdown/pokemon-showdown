@@ -1,4 +1,16 @@
 export const Pokedex: {[speciesid: string]: SpeciesData} = {
+	fusionmon: {
+		num: 9999,
+		name: "Fusionmon",
+		types: ["???"],
+		gender: "N",
+		baseStats: {hp: 1, atk: 1, def: 1, spa: 1, spd: 1, spe: 1},
+		abilities: {0: "Run Away"},
+		heightm: 10,
+		weightkg: 999,
+		color: "Black",
+		eggGroups: ["Undiscovered"],
+	},
 	bulbasaur: {
 		num: 1,
 		name: "Bulbasaur",
