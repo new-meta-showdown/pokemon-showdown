@@ -1,9 +1,9 @@
 const fuseAbilities = (headAbilities, bodyAbilities) => {
-	const uniqueAbilities = [...new Set(Object.keys(headAbilities).concat(Object.keys(bodyAbilities)))];
+	const uniqueAbilities = [...new Set(Object.values(headAbilities).concat(Object.values(bodyAbilities)))];
 	var newAbilities = {
 		0: uniqueAbilities[0],
 	};
-	for (var i = 1; i < 5; i++) {
+	for (var i = 1; i < 6; i++) {
 		if (uniqueAbilities[i]) {
 			newAbilities[i] = uniqueAbilities[i];
 		}
@@ -15,10 +15,10 @@ const fuseStats = (headStats, bodyStats) => {
 	var ADS = {atk: 0, def: 0, spe: 0};
 	var HSS = {hp: 0, spa: 0, spd: 0};
 	for (var stat in ADS) {
-		stat = 2 * (bodyStats[stat] / 3) + (headStats[stat] / 3);
+		ADS[stat] = Math.floor(2 * (bodyStats[stat] / 3) + (headStats[stat] / 3))
 	}
 	for (var stat in HSS) {
-		stat = 2 * (headStats[stat] / 3) + (bodyStats[stat] / 3);
+		HSS[stat] = Math.floor((bodyStats[stat] / 3) + 2 * (headStats[stat] / 3))
 	}
 	const newStats = {
 		hp: HSS.hp,

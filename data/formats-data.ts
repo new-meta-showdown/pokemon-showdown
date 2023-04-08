@@ -1,4 +1,7 @@
 export const FormatsData: {[k: string]: SpeciesFormatsData} = {
+	fusionmon: {
+		tier: "OU",
+	},
 	bulbasaur: {
 		isNonstandard: "Past",
 		tier: "Illegal",

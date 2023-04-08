@@ -31,6 +31,11 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			watergun: ["3L1"],
 		},
 	},
+	fusionmon: {
+		learnset: {
+			voltswitch: ["9M"],
+		},
+	},
 	bulbasaur: {
 		learnset: {
 			amnesia: ["8M", "7E", "6E", "5E", "4E"],
