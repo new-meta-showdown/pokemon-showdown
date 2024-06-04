@@ -592,6 +592,20 @@ export class TeamValidator {
 				} else if (!Object.values(species.abilities).includes(ability.name)) {
 					if (tierSpecies.abilities[0] === ability.name) {
 						set.ability = species.abilities[0];
+					} else if (toID(set.species) === 'fusionmon' && set.name.includes("/")) {
+						const fusionmon = set.name.split("/");
+						const fusion = fusePokemon(dex.species.get(fusionmon[0]), dex.species.get(fusionmon[1]));
+						let allowed = false;
+						for (const abilityName of Object.values(fusion.abilities)) {
+							if (abilityName.includes(ability.name)) {
+								allowed = true;
+								break;
+							}
+						}
+						if (ability.name === 'Run Away' && !Object.values(fusion.abilities).includes('Run Away')) allowed = false;
+						if (!allowed) {
+							problems.push(`${name} can't have ${set.ability}.`);
+						}
 					} else {
 						problems.push(`${name} can't have ${set.ability}.`);
 					}
@@ -681,7 +695,7 @@ export class TeamValidator {
 		var learnsetSpecies;
 		if (outOfBattleSpecies.id !== "fusionmon") {
 			learnsetSpecies = dex.species.getLearnsetData(outOfBattleSpecies.id);
-		} else if (set.name && set.name !== "Fusionmon") {
+		}/* else if (set.name && set.name !== "Fusionmon") {
 			// combine the learnsets of the fusionmon's components
 			// we can get the components by splitting the name by "/" then converting them to IDs
 			var components = set.name.split("/");
@@ -728,7 +742,7 @@ export class TeamValidator {
 				// @ts-ignore
 				learnsetSpecies.encounters.push(bodyData.encounters[i]);
 			}
-		}
+		}*/
 		let eventOnlyData;
 
 		if (!setSources.sourcesBefore && setSources.sources.length) {
@@ -1677,6 +1691,17 @@ export class TeamValidator {
 		const dex = this.dex;
 		const ruleTable = this.ruleTable;
 
+		if (toID(set.species) === 'fusionmon' && set.name.includes("/")) {
+			const fusionmon = set.name.split("/");
+			const fusion = fusePokemon(dex.species.get(fusionmon[0]), dex.species.get(fusionmon[1]));
+			if (ability.name === 'Run Away' && !Object.values(fusion.abilities).includes('Run Away')) return `A Fusionmon cannot have the ability Run Away (you probably forgot to set the Fusionmon's ability).`;
+			for (const abilityName of Object.values(fusion.abilities)) {
+				if (abilityName.includes(ability.name)) {
+					return null;
+				}
+			}
+		}
+
 		setHas['ability:' + ability.id] = true;
 
 		if (this.format.id.startsWith('gen9pokebilities')) {
@@ -2053,6 +2078,17 @@ export class TeamValidator {
 
 		move = dex.moves.get(move);
 		const moveid = move.id;
+		if (toID(s.name) === 'fusionmon' && set.name?.includes('/')) {
+			const fusion = set.name.split('/');
+			const species1 = dex.species.get(fusion[0]);
+			const species2 = dex.species.get(fusion[1]);
+			let problems = [];
+			for (const species of [species1, species2]) {
+				problems.push(this.checkCanLearn(move, species, setSources, set));
+			}
+			if (problems.includes(null)) return null;
+			return problems.join('\n');
+		}
 		const baseSpecies = dex.species.get(s);
 		let species: Species | null = baseSpecies;
 

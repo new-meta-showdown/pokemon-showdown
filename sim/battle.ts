@@ -314,35 +314,7 @@ export class Battle {
 			}
 		}
 
-		for (const side of this.sides) {
-			if (!side) continue;
-			if (side.pokemon.length) {
-				for (const pokemon of side.pokemon) {
-					if (toID(pokemon.species) === 'fusionmon' && pokemon.name.includes("/")) {
-						var pokemonIncluded = pokemon.name.split("/");
-						var pokemonSpecies = [];
-						for (const pkmn of pokemonIncluded) {
-							pokemonSpecies.push(Dex.species.get(pkmn));
-						}
-						const fusion = fusePokemon(pokemonSpecies[0], pokemonSpecies[1]);
-						// create a copy of the pokemon's species, assigning the fusion's types,
-						// baseStats, eggGroups, height, weight, and color
-						// formeChange the pokemon to the fusion
-						// update the max hp to the baseStats hp and the hp to the max hp
-
-						var fusionSpecies = Object.assign({}, pokemon.species);
-						var x = {types: fusion.types, baseStats: fusion.baseStats, eggGroups: fusion.eggGroups, heightm: fusion.heightm, weightkg: fusion.weightkg, color: fusion.color};
-						Object.assign(fusionSpecies, x);
-						pokemon.formeChange(fusionSpecies);
-						// update pokemon.maxHp using the formula
-						// floor(0.01 x (2 x Base + IV + floor(0.25 x EV)) x Level) + Level + 10
-						var maxHp = Math.floor(0.01 * (2 * fusion.baseStats.hp + pokemon.set.ivs.hp + Math.floor(0.25 * pokemon.set.evs.hp)) * pokemon.level) + pokemon.level + 10;
-						pokemon.maxhp = maxHp;
-						pokemon.hp = maxHp;
-					}
-				}
-			}
-		}
+		
 	}
 
 	toJSON(): AnyObject {
@@ -1829,6 +1801,37 @@ export class Battle {
 		this.queue.addChoice({choice: 'start'});
 		this.midTurn = true;
 		if (!this.requestState) this.go();
+
+		for (const side of this.sides) {
+			if (!side) continue;
+			if (side.pokemon.length) {
+				for (const pokemon of side.pokemon) {
+					if (toID(pokemon.species) === 'fusionmon' && pokemon.name.includes("/")) {
+						var pokemonIncluded = pokemon.name.split("/");
+						var pokemonSpecies = [];
+						for (const pkmn of pokemonIncluded) {
+							pokemonSpecies.push(Dex.species.get(pkmn));
+						}
+						const fusion = fusePokemon(pokemonSpecies[0], pokemonSpecies[1]);
+						// create a copy of the pokemon's species, assigning the fusion's types,
+						// baseStats, eggGroups, height, weight, and color
+						// formeChange the pokemon to the fusion
+						// update the max hp to the baseStats hp and the hp to the max hp
+
+						var fusionSpecies = Object.assign({}, pokemon.species);
+						var x = {types: fusion.types, baseStats: fusion.baseStats, eggGroups: fusion.eggGroups, heightm: fusion.heightm, weightkg: fusion.weightkg, color: fusion.color};
+						Object.assign(fusionSpecies, x);
+						pokemon.formeChange(fusionSpecies);
+						pokemon.setType(fusion.types);
+						// update pokemon.maxHp using the formula
+						// floor(0.01 x (2 x Base + IV + floor(0.25 x EV)) x Level) + Level + 10
+						var maxHp = Math.floor(0.01 * (2 * fusion.baseStats.hp + pokemon.set.ivs.hp + Math.floor(0.25 * pokemon.set.evs.hp)) * pokemon.level) + pokemon.level + 10;
+						pokemon.maxhp = maxHp;
+						pokemon.hp = maxHp;
+					}
+				}
+			}
+		}
 	}
 
 	restart(send?: (type: string, data: string | string[]) => void) {

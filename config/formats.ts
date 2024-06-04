@@ -82,11 +82,6 @@ export const Formats: FormatList = [
 		mod: 'gen9',
 		ruleset: ['Standard'],
 		banlist: ['Uber', 'AG', 'Arena Trap', 'Moody', 'Sand Veil', 'Shadow Tag', 'Snow Cloak', 'King\'s Rock', 'Baton Pass'],
-		onValidateSet(set) {
-			if (toID(set.species) === 'fusionmon') {
-				return;
-			}
-		},
 	},
 	{
 		name: "[Gen 9] Ubers",
